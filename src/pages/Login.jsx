@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import WaitingRoom from "./WaitingRoom";
 import Form from "react-bootstrap/Form";
 import { useGameContext } from "../contexts/GameContextProvider";
 
 const Homepage = () => {
 	const [username, setUsername] = useState("");
+	const [loading, setLoading] = useState(false);
 	const [game, setGame] = useState();
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
-	const navigate = useNavigate();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -18,7 +18,8 @@ const Homepage = () => {
 		setGameUsername(username);
 
 		// redirect to game
-		navigate(`/games/${game}`);
+		// navigate(`/games/${game}`);
+		setLoading(true);
 	};
 
 	// as soon as the component is mounted, request room list
@@ -31,54 +32,62 @@ const Homepage = () => {
 	}, [socket]);
 
 	return (
-		<div id="login">
-			<Form onSubmit={handleSubmit}>
-				<Form.Group className="mb-3" controlId="username">
-					<Form.Label>Username</Form.Label>
-					<Form.Control
-						onChange={(e) => setUsername(e.target.value)}
-						placeholder="Enter your username"
-						required
-						type="text"
-						value={username}
-					/>
-				</Form.Group>
+		<>
+			{loading && <WaitingRoom />}
 
-				<Form.Group className="mb-3" controlId="room">
-					<Form.Label>Room</Form.Label>
-					<Form.Select
-						onChange={(e) => setGame(e.target.value)}
-						required
-						value={game}
-					>
-						{gamelist.length === 0 && (
-							<option disabled>Loading...</option>
-						)}
-						{gamelist.length && (
-							<>
-								<option value="">Select a room to join</option>
-								{gamelist.map((r) => (
-									<option key={r.id} value={r.id}>
-										{r.name}
-									</option>
-								))}
-							</>
-						)}
-					</Form.Select>
-				</Form.Group>
+			{!loading && (
+				<div id="login">
+					<Form onSubmit={handleSubmit}>
+						<Form.Group className="mb-3" controlId="username">
+							<Form.Label>Username</Form.Label>
+							<Form.Control
+								onChange={(e) => setUsername(e.target.value)}
+								placeholder="Enter your username"
+								required
+								type="text"
+								value={username}
+							/>
+						</Form.Group>
 
-				<div className="d-flex justify-content-between">
-					<Button
-						variant="success"
-						type="submit"
-						className="w-100"
-						disabled={!username || !game}
-					>
-						Join
-					</Button>
+						<Form.Group className="mb-3" controlId="room">
+							<Form.Label>Room</Form.Label>
+							<Form.Select
+								onChange={(e) => setGame(e.target.value)}
+								required
+								value={game}
+							>
+								{gamelist.length === 0 && (
+									<option disabled>Loading...</option>
+								)}
+								{gamelist.length && (
+									<>
+										<option value="">
+											Select a room to join
+										</option>
+										{gamelist.map((r) => (
+											<option key={r.id} value={r.id}>
+												{r.name}
+											</option>
+										))}
+									</>
+								)}
+							</Form.Select>
+						</Form.Group>
+
+						<div className="d-flex justify-content-between">
+							<Button
+								variant="success"
+								type="submit"
+								className="w-100"
+								disabled={!username || !game}
+							>
+								Join
+							</Button>
+						</div>
+					</Form>
 				</div>
-			</Form>
-		</div>
+			)}
+		</>
 	);
 };
 
