@@ -35,9 +35,11 @@ const Homepage = () => {
 		<>
 			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
+
+				<h1>Battleship Multiplayer Game</h1>
 				<Form onSubmit={handleSubmit}>
-					<Form.Group className="mb-3" controlId="username">
-						<Form.Label>Username</Form.Label>
+					<Form.Group className="loginForm" controlId="username">
+						{/* <Form.Label>Username</Form.Label> */}
 						<Form.Control
 							onChange={(e) => setUsername(e.target.value)}
 							placeholder="Enter your username"
@@ -47,8 +49,8 @@ const Homepage = () => {
 						/>
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="room">
-						<Form.Label>Room</Form.Label>
+					<Form.Group className="chooseRoom" controlId="room">
+						{/* <Form.Label>Room</Form.Label> */}
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							required
@@ -72,7 +74,7 @@ const Homepage = () => {
 						</Form.Select>
 					</Form.Group>
 
-					<div className="d-flex justify-content-between">
+					<div className="btn-join">
 						<Button
 							variant="success"
 							type="submit"
