@@ -27,7 +27,8 @@ const Homepage = () => {
 		console.log("Requesting game list from server...");
 
 		socket.emit("get-game-list", (games) => {
-			setGamelist(games);
+			const list = games.filter((game) => game.id);
+			setGamelist(list);
 		});
 	}, [socket]);
 
@@ -62,9 +63,9 @@ const Homepage = () => {
 									<option value="">
 										Select a room to join
 									</option>
-									{gamelist.map((r) => (
-										<option key={r.id} value={r.id}>
-											{r.name}
+									{gamelist.map((game) => (
+										<option key={game.id} value={game.id}>
+											{game.name}
 										</option>
 									))}
 								</>
