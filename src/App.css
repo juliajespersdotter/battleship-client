@@ -1,1 +1,18 @@
+#App {
+    height: 100vh;
+    background-color: #C9DAF8;
+}
+
+#login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loginForm, .chooseRoom, .btn-join {
+    justify-content: center;
+    display: flex;
+    padding: 10px 0px;
+}
 
