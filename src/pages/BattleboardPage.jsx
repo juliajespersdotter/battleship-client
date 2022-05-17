@@ -1,7 +1,10 @@
+import Battleboard from "../components/Battleboard";
+
 const BattleboardPage = () => {
     return ( 
     <>
-    <h1>Battleboard</h1>
+    <h1 className="heading-title">Battleboard</h1>
+    <Battleboard />
     </> );
 }
  

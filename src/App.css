@@ -1,1 +1,39 @@
+.heading-title {
+    margin-top: 20px;
+    text-align: center;
+}
 
+
+.game-container {
+    display: flex;
+    padding-top: 100px;
+}
+
+.game-wrapper {
+    width: 400px;
+	height: 400px;
+	margin: 0 auto;
+    margin-top: 1em;
+    display: grid;
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+    background-color: rgb(201, 221, 250);
+}
+.box
+{
+  border: 1px solid white;
+  display: flex;
+}
+.game-board{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.game-title {
+    font-size: 25px;
+    color: black;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
