@@ -14,12 +14,11 @@ const Homepage = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		// set chat username
+		// set game username
 		setGameUsername(username);
 
 		// redirect to game
 		navigate(`/games/${game}`);
-		// setLoading(true);
 	};
 
 	// as soon as the component is mounted, request room list
@@ -48,8 +47,8 @@ const Homepage = () => {
 						/>
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="room">
-						<Form.Label>Room</Form.Label>
+					<Form.Group className="mb-3" controlId="game">
+						<Form.Label>Game</Form.Label>
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							required
@@ -61,7 +60,7 @@ const Homepage = () => {
 							{gamelist.length && (
 								<>
 									<option value="">
-										Select a room to join
+										Select a game to join
 									</option>
 									{gamelist.map((game) => (
 										<option key={game.id} value={game.id}>
