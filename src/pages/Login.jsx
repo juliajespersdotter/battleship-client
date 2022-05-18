@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,15 @@ const Homepage = () => {
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
+
+	const getGameList = () => {
+		socket.emit("get-game-list", (games) => {
+			const list = games.filter((game) => game.id);
+			setGamelist(list);
+		});
+	};
+
+	socket.on("new-game-list", getGameList());
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -33,7 +42,6 @@ const Homepage = () => {
 
 	return (
 		<>
-			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
 				<h1>Battleship Multiplayer Game</h1>
 				<Form onSubmit={handleSubmit}>

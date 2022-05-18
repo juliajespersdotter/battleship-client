@@ -16,6 +16,7 @@ const BattleboardPage = () => {
 
 		if (Object.keys(playerlist).length === 2) {
 			setWaiting(false);
+			socket.emit("update-list");
 		}
 	};
 
@@ -55,7 +56,7 @@ const BattleboardPage = () => {
 				<ul id="online-players">
 					{Object.values(players).map((player, index) => (
 						<li key={index}>
-							<span className="user-icon">🧑</span> {player}
+							<span className="user-icon">🚢</span> {player}
 						</li>
 					))}
 				</ul>
