@@ -63,7 +63,7 @@ const Homepage = () => {
 						/>
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="custom-game">
+					<Form.Group className="chooseRoom" controlId="custom-game">
 						<Form.Label>Create custom game</Form.Label>
 						<Form.Control
 							onChange={(e) => setCustomGame(e.target.value)}
