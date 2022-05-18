@@ -7,7 +7,7 @@ import { useGameContext } from "../contexts/GameContextProvider";
 const Homepage = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
-	const [customGame, setCustomGame] = useState();
+	const [customGame, setCustomGame] = useState("");
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -24,6 +24,8 @@ const Homepage = () => {
 		} else {
 			navigate(`/games/${game}`);
 		}
+
+		socket.emit("update-list");
 	};
 
 	socket.on("new-game-list", () => {
@@ -62,29 +64,40 @@ const Homepage = () => {
 					<Form.Group className="mb-3" controlId="custom-game">
 						<Form.Label>Create custom game</Form.Label>
 						<Form.Control
-							onChange={(e) => setGame(e.target.value)}
+							onChange={(e) => setCustomGame(e.target.value)}
 							placeholder="Name of custom game..."
 							type="text"
-							value={game}
+							value={customGame}
 						/>
 					</Form.Group>
+
+					<div className="btn-join">
+						<Button
+							variant="success"
+							type="submit"
+							className="w-100"
+							disabled={!username || !customGame}
+						>
+							Create custom game
+						</Button>
+					</div>
 
 					<Form.Group className="mb-3" controlId="game">
 						<Form.Label>Open games</Form.Label>
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
-							required
 							value={game}
+							disabled={customGame}
 						>
 							{gamelist.length === 0 && (
 								<option disabled>Loading...</option>
 							)}
 
-							{/* {customGame && (
+							{customGame && (
 								<option disabled>
 									Custom game already chosen
 								</option>
-							)} */}
+							)}
 							{gamelist.length && (
 								<>
 									<option value="">
@@ -107,7 +120,7 @@ const Homepage = () => {
 							className="w-100"
 							disabled={!username || !game}
 						>
-							Join
+							Join open game
 						</Button>
 					</div>
 				</Form>
