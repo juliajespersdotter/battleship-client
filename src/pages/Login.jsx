@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
+import "../assets/css/login.css"
 
 const Homepage = () => {
 	const [username, setUsername] = useState("");
@@ -39,7 +40,8 @@ const Homepage = () => {
 	}, [socket]);
 
 	return (
-		<>
+		<loginPage>
+			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
 				<h1>Battleship Multiplayer Game</h1>
 				<Form onSubmit={handleSubmit}>
@@ -54,8 +56,8 @@ const Homepage = () => {
 						/>
 					</Form.Group>
 
-					<Form.Group className="mb-3" controlId="game">
-						<Form.Label>Game</Form.Label>
+					<Form.Group className="chooseRoom" controlId="game">
+						{/* <Form.Label>Game</Form.Label> */}
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							required
@@ -91,7 +93,7 @@ const Homepage = () => {
 					</div>
 				</Form>
 			</div>
-		</>
+		</loginPage>
 	);
 };
 
