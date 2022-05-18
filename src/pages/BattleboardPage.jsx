@@ -64,8 +64,13 @@ const BattleboardPage = () => {
 			</div>
 
 			{waiting && <p>Waiting for player...</p>}
-			<Battleboard />
-			{!waiting && <p>Game is starting!</p>}
+
+			{!waiting && (
+				<>
+					<p>Game is starting!</p>
+					<Battleboard />
+				</>
+			)}
 		</>
 	);
 };
