@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
+import "../assets/css/login.css";
 
 const Homepage = () => {
 	const [username, setUsername] = useState("");
@@ -46,7 +47,8 @@ const Homepage = () => {
 	}, [socket]);
 
 	return (
-		<>
+		<loginPage>
+			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
 				<h1>Battleship Multiplayer Game</h1>
 				<Form onSubmit={handleSubmit}>
@@ -125,7 +127,7 @@ const Homepage = () => {
 					</div>
 				</Form>
 			</div>
-		</>
+		</loginPage>
 	);
 };
 
