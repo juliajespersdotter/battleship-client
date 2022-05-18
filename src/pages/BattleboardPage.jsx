@@ -4,7 +4,7 @@ import { useGameContext } from "../contexts/GameContextProvider";
 
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
-	const [connected, setConnected] = useState(false);
+	// const [connected, setConnected] = useState(false);
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const { game_id } = useParams();
@@ -16,6 +16,7 @@ const BattleboardPage = () => {
 
 		if (Object.keys(playerlist).length === 2) {
 			setWaiting(false);
+			socket.emit("update-list");
 		}
 	};
 
@@ -32,7 +33,7 @@ const BattleboardPage = () => {
 				`Successfully joined ${game_id} as ${gameUsername}`,
 				status
 			);
-			setConnected(true);
+			// setConnected(true);
 		});
 
 		// listen for updated userlist
@@ -55,7 +56,7 @@ const BattleboardPage = () => {
 				<ul id="online-players">
 					{Object.values(players).map((player, index) => (
 						<li key={index}>
-							<span className="user-icon">🧑</span> {player}
+							<span className="user-icon">🚢</span> {player}
 						</li>
 					))}
 				</ul>
