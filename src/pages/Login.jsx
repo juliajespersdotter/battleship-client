@@ -7,6 +7,7 @@ import { useGameContext } from "../contexts/GameContextProvider";
 const Homepage = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
+	const [customGame, setCustomGame] = useState();
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -18,7 +19,11 @@ const Homepage = () => {
 		setGameUsername(username);
 
 		// redirect to game
-		navigate(`/games/${game}`);
+		if (customGame) {
+			navigate(`/games/${customGame}`);
+		} else {
+			navigate(`/games/${game}`);
+		}
 	};
 
 	socket.on("new-game-list", () => {
@@ -44,7 +49,7 @@ const Homepage = () => {
 				<h1>Battleship Multiplayer Game</h1>
 				<Form onSubmit={handleSubmit}>
 					<Form.Group className="loginForm" controlId="username">
-						{/* <Form.Label>Username</Form.Label> */}
+						<Form.Label>Username</Form.Label>
 						<Form.Control
 							onChange={(e) => setUsername(e.target.value)}
 							placeholder="Enter your username"
@@ -54,8 +59,18 @@ const Homepage = () => {
 						/>
 					</Form.Group>
 
+					<Form.Group className="mb-3" controlId="custom-game">
+						<Form.Label>Create custom game</Form.Label>
+						<Form.Control
+							onChange={(e) => setGame(e.target.value)}
+							placeholder="Name of custom game..."
+							type="text"
+							value={game}
+						/>
+					</Form.Group>
+
 					<Form.Group className="mb-3" controlId="game">
-						<Form.Label>Game</Form.Label>
+						<Form.Label>Open games</Form.Label>
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							required
@@ -64,6 +79,12 @@ const Homepage = () => {
 							{gamelist.length === 0 && (
 								<option disabled>Loading...</option>
 							)}
+
+							{/* {customGame && (
+								<option disabled>
+									Custom game already chosen
+								</option>
+							)} */}
 							{gamelist.length && (
 								<>
 									<option value="">
