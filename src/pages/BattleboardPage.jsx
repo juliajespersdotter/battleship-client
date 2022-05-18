@@ -5,6 +5,7 @@ import { useGameContext } from "../contexts/GameContextProvider";
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
 	const [connected, setConnected] = useState(false);
+	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const { game_id } = useParams();
 	const navigate = useNavigate();
@@ -12,6 +13,10 @@ const BattleboardPage = () => {
 	const handleUpdatePlayers = (playerlist) => {
 		console.log("Got new playerlist", playerlist);
 		setPlayers(playerlist);
+
+		if (Object.keys(playerlist).length === 2) {
+			setWaiting(false);
+		}
 	};
 
 	// connect to room when component is mounted
@@ -34,7 +39,7 @@ const BattleboardPage = () => {
 		socket.on("player:list", handleUpdatePlayers);
 
 		return () => {
-			// 	console.log("Running cleanup");
+			console.log("Running cleanup");
 
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
@@ -55,6 +60,10 @@ const BattleboardPage = () => {
 					))}
 				</ul>
 			</div>
+
+			{waiting && <p>Waiting for player...</p>}
+
+			{!waiting && <p>Game is starting!</p>}
 		</>
 	);
 };
