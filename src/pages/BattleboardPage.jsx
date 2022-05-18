@@ -4,7 +4,7 @@ import { useGameContext } from "../contexts/GameContextProvider";
 
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
-	const [connected, setConnected] = useState(false);
+	// const [connected, setConnected] = useState(false);
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const { game_id } = useParams();
@@ -33,7 +33,7 @@ const BattleboardPage = () => {
 				`Successfully joined ${game_id} as ${gameUsername}`,
 				status
 			);
-			setConnected(true);
+			// setConnected(true);
 		});
 
 		// listen for updated userlist

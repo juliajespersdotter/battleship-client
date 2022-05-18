@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
@@ -11,15 +11,6 @@ const Homepage = () => {
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
 
-	const getGameList = () => {
-		socket.emit("get-game-list", (games) => {
-			const list = games.filter((game) => game.id);
-			setGamelist(list);
-		});
-	};
-
-	socket.on("new-game-list", getGameList());
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -29,6 +20,13 @@ const Homepage = () => {
 		// redirect to game
 		navigate(`/games/${game}`);
 	};
+
+	socket.on("new-game-list", () => {
+		socket.emit("get-game-list", (games) => {
+			const list = games.filter((game) => game.id);
+			setGamelist(list);
+		});
+	});
 
 	// as soon as the component is mounted, request room list
 	useEffect(() => {
