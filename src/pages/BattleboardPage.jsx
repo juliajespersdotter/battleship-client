@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import 'normalize.css';
 import "../assets/css/BattleboardPage.css"
 
 const BattleboardPage = () => {
@@ -52,20 +53,23 @@ const BattleboardPage = () => {
 
 	return (
 		<div className="gamewrapper">
-			<h1 className="game-header">Gamepage</h1>
 
-			<div id="players">
-				<h2>Players in this room:</h2>
-				<ul id="online-players">
-					{Object.values(players).map((player, index) => (
-						<li key={index}>
-							<span className="user-icon">🚢</span> {player}
-						</li>
-					))}
-				</ul>
-			</div>
+			<div className="game-header">
+				<h1 className="game-title">Gamepage</h1>
 
-			{waiting && <p>Waiting for player...</p>}
+				<div id="players">
+					<h2>Players in this room:</h2>
+					<ul id="online-players">
+						{Object.values(players).map((player, index) => (
+							<li key={index}>
+								<span className="user-icon">🚢</span> {player}
+							</li>
+						))}
+					</ul>
+				</div>
+
+				{waiting && <p>Waiting for player...</p>}
+			</div>	
 			<Battleboard />
 			{!waiting && (
 				<>

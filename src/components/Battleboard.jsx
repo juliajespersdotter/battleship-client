@@ -170,10 +170,11 @@ const Battleboard = ({ socket }) => {
                 <div className="game-board game-board-you">
                     <h3 className="game-title game-title-you">You</h3>
                     <p className={winner}>Congrats! You win!</p>
+                    <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemain.length}</span></p>
                     <div className="game-wrapper game-wrapper-you">
                         <Gameboard squares={board} onClick={handleClick} />
                     </div>
-                    <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemain.length}</span></p>
+                    
                 </div>
                 {/* <div className="game-board game-board-enemy">
                <h3 className="game-title game-title-you">Enemy</h3>

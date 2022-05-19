@@ -2,6 +2,11 @@
 	background: url(../images/gameBG.png);
 	background-size: cover;
 	background-position: center;
-	height: 100vh;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
+.game-title {
+	margin: 0;
+}
