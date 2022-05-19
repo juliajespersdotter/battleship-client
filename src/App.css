@@ -57,3 +57,51 @@
     padding-bottom: 0;
     
 }
+
+/* .lightcoral {
+    background-color: lightcoral;
+} */
+
+.ship2 {
+    background-color: green;
+}
+.ship2Second {
+    background-color: green;
+}
+
+.ship3 {
+    background-color: yellow;
+}
+
+.ship4 {
+    background-color: orange;
+}
+
+.hitShip {
+    background-image: url(./images/bomb.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.missShip {
+    background-image: url(./images/xmark.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.ships-remain-text {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 20px;
+}
+.ships-remain-text-bold{
+    font-weight: 900;
+}
+
+.hide {
+    display: none;
+}
+.winner {
+    font-size: 50px;
+    margin-top: 20px;
+    text-align: center;
+    display: block;
+}
