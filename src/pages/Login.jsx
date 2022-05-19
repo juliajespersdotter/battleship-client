@@ -47,7 +47,7 @@ const Homepage = () => {
 	}, [socket]);
 
 	return (
-		<loginPage>
+		<>
 			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
 				<h1>Battleship Multiplayer Game</h1>
@@ -127,7 +127,7 @@ const Homepage = () => {
 					</div>
 				</Form>
 			</div>
-		</loginPage>
+		</>
 	);
 };
 

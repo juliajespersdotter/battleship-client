@@ -62,18 +62,18 @@
     background-color: lightcoral;
 } */
 
-.green {
+.ship2 {
     background-color: green;
 }
-.green2 {
+.ship2Second {
     background-color: green;
 }
 
-.yellow {
+.ship3 {
     background-color: yellow;
 }
 
-.orange {
+.ship4 {
     background-color: orange;
 }
 
@@ -86,4 +86,22 @@
     background-image: url(./images/xmark.png);
     background-repeat: no-repeat;
     background-position: center;
+}
+.ships-remain-text {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 20px;
+}
+.ships-remain-text-bold{
+    font-weight: 900;
+}
+
+.hide {
+    display: none;
+}
+.winner {
+    font-size: 50px;
+    margin-top: 20px;
+    text-align: center;
+    display: block;
 }

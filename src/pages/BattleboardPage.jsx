@@ -46,6 +46,7 @@ const BattleboardPage = () => {
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
+		 // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
 
 	return (
@@ -64,11 +65,11 @@ const BattleboardPage = () => {
 			</div>
 
 			{waiting && <p>Waiting for player...</p>}
-
+			<Battleboard />
 			{!waiting && (
 				<>
 					<p>Game is starting!</p>
-					<Battleboard />
+					{/* <Battleboard /> */}
 				</>
 			)}
 		</>
