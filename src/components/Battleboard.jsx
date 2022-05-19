@@ -73,8 +73,8 @@ const Battleboard = ({ socket }) => {
 
             let skepp2Second = ship2();
             if (boardCopy[skepp2Second[0]] === null && boardCopy[skepp2Second[1]] === null) {
-                boardCopy[skepp2Second[0]] = 'green';
-                boardCopy[skepp2Second[1]] = 'green';
+                boardCopy[skepp2Second[0]] = 'green2';
+                boardCopy[skepp2Second[1]] = 'green2';
             }
 
             let skepp3 = ship3();
@@ -92,7 +92,7 @@ const Battleboard = ({ socket }) => {
                 boardCopy[skepp4[3]] = 'orange';
             }
 
-            if (boardCopy[skepp3[0]] === 'yellow' && boardCopy[skepp2Second[0]] === 'green' && boardCopy[skepp4[0]] === 'orange') {
+            if (boardCopy[skepp3[0]] === 'yellow' && boardCopy[skepp2Second[0]] === 'green2' && boardCopy[skepp4[0]] === 'orange') {
                 setBoard(boardCopy);
                 isReady = false;
             }
@@ -113,14 +113,16 @@ const Battleboard = ({ socket }) => {
     const handleClick = i => {
 
         const boardCopy = [...board];
-        // boardCopy[i] = isNext ? "red" : "blue"
-        boardCopy[i] = "lightcoral"
+        
+        if(boardCopy[i] !== null) {
+            boardCopy[i] = "hitShip";
+        }
+        else {
+            boardCopy[i] = "missShip";
+        }
         setBoard(boardCopy);
-        // setIsNext(false)
+        
     }
-
-
-
 
     return (
         <>
@@ -134,7 +136,7 @@ const Battleboard = ({ socket }) => {
                 {/* <div className="game-board game-board-enemy">
                <h3 className="game-title game-title-you">Enemy</h3>
                <div className="game-wrapper game-wrapper-enemy">
-               <Gameboard  squares={board} onClick={handleClick} color={color}/>
+               <Gameboard  squares={board} onClick={handleClick}/>
                 </div>
                </div> */}
             </div>
