@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import "../assets/css/BattleboardPage.css"
 
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
@@ -49,8 +50,8 @@ const BattleboardPage = () => {
 	}, [socket, game_id, gameUsername, navigate]);
 
 	return (
-		<>
-			<h1>Gamepage</h1>
+		<div className="gamewrapper">
+			<h1 className="game-header">Gamepage</h1>
 
 			<div id="players">
 				<h2>Players in this room:</h2>
@@ -69,9 +70,11 @@ const BattleboardPage = () => {
 				<>
 					<p>Game is starting!</p>
 					<Battleboard />
+					<Battleboard />
+
 				</>
 			)}
-		</>
+		</div>
 	);
 };
 

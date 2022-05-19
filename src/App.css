@@ -1,25 +1,11 @@
 #App {
     height: 100%;
-    background-color: white;
 }
 
-#login {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.loginForm, .chooseRoom, .btn-join {
-    justify-content: center;
-    display: flex;
-    padding: 10px 0px;
-}
 .heading-title {
     margin-top: 20px;
     text-align: center;
 }
-
 
 .game-container {
     display: flex;
@@ -34,15 +20,15 @@
     margin-top: 1em;
     display: grid;
     grid-template: repeat(10, 1fr) / repeat(10, 1fr);
-    background-color: rgb(201, 221, 250);
-    
+    background-color: rgb(201, 221, 250);  
 }
-.box
-{
+
+.box {
   border: 1px solid white;
   display: flex;
 }
-.game-board{
+
+.game-board {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -55,5 +41,4 @@
     text-align: center;
     margin-bottom: 0;
     padding-bottom: 0;
-    
 }
