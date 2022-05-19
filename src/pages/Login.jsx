@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
-import "../assets/css/Login.css";
+import "../assets/css/login.css";
 
 const Homepage = () => {
 	const [username, setUsername] = useState("");
