@@ -19,6 +19,9 @@ const BattleboardPage = () => {
 		if (Object.keys(playerlist).length === 2) {
 			setWaiting(false);
 			socket.emit("update-list");
+		} else if (Object.keys(playerlist).length === 1) {
+			setWaiting(true);
+			socket.emit("update-list");
 		}
 	};
 

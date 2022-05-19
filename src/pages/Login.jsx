@@ -21,7 +21,12 @@ const Homepage = () => {
 
 		// redirect to game
 		if (customGame) {
-			navigate(`/games/${customGame}`);
+			console.log(customGame);
+			socket.emit("check-games", customGame, (status) => {
+				status.success
+					? navigate(`/games/${customGame}`)
+					: alert("game name cannot be same as open game");
+			});
 		} else {
 			navigate(`/games/${game}`);
 		}
@@ -32,6 +37,7 @@ const Homepage = () => {
 	socket.on("new-game-list", () => {
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
+			console.log(list);
 			setGamelist(list);
 		});
 	});
@@ -42,6 +48,7 @@ const Homepage = () => {
 
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
+			console.log(list);
 			setGamelist(list);
 		});
 	}, [socket]);
@@ -63,7 +70,6 @@ const Homepage = () => {
 							value={username}
 						/>
 					</Form.Group>
-				
 
 					<Form.Group className="chooseRoom" controlId="custom-game">
 						{/* <Form.Label>Create custom game</Form.Label> */}
@@ -79,13 +85,17 @@ const Homepage = () => {
 								variant="success"
 								type="submit"
 								className="w-100"
-								disabled={!username || !customGame}
+								disabled={
+									!username ||
+									!customGame ||
+									!customGame.trim()
+								}
 							>
 								Create custom game
 							</Button>
 						</div>
 					</Form.Group>
-					
+
 					<Form.Group className="createRoom" controlId="game">
 						{/* <Form.Label>Open games</Form.Label> */}
 						<Form.Select
@@ -93,15 +103,8 @@ const Homepage = () => {
 							value={game}
 							disabled={customGame}
 						>
-							{gamelist.length === 0 && (
-								<option disabled>Loading...</option>
-							)}
+							{!gamelist && <option disabled>Loading...</option>}
 
-							{customGame && (
-								<option disabled>
-									Custom game already chosen
-								</option>
-							)}
 							{gamelist.length && (
 								<>
 									<option value="">
@@ -117,20 +120,19 @@ const Homepage = () => {
 						</Form.Select>
 
 						<div className="btn-join">
-						<Button
-							variant="success"
-							type="submit"
-							className="w-100"
-							disabled={!username || !game}
-						>
-							Join open game
-						</Button>
+							<Button
+								variant="success"
+								type="submit"
+								className="w-100"
+								disabled={!username || !game}
+							>
+								Join open game
+							</Button>
 						</div>
-
-					</Form.Group>		
+					</Form.Group>
 				</Form>
 			</div>
-		</div>	
+		</div>
 	);
 };
 
