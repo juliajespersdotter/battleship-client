@@ -2,9 +2,10 @@
 const Square = ({value,onClick}) => {
    
     return (
-        <div className='box' onClick={onClick} style={{backgroundColor:value}}></div>
+        <div className={`box ${value}`} onClick={onClick}></div>
     )
 }
   
 export default Square;
 
+//style={{backgroundColor:value}}

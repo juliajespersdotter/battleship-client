@@ -1,6 +1,7 @@
-.loginPage {
+.gamewrapper {
 	background: url(../images/gameBG.png);
 	background-size: cover;
 	background-position: center;
 	height: 100vh;
 }
+
