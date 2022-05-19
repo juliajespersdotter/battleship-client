@@ -58,6 +58,32 @@
     
 }
 
-.lightcoral {
+/* .lightcoral {
     background-color: lightcoral;
+} */
+
+.green {
+    background-color: green;
+}
+.green2 {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.hitShip {
+    background-image: url(./images/bomb.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.missShip {
+    background-image: url(./images/xmark.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
