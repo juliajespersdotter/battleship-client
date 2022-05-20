@@ -3,11 +3,12 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
-import "../assets/css/login.css"
+import "../assets/css/login.css";
 
 const Homepage = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
+	const [customGame, setCustomGame] = useState("");
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -19,7 +20,13 @@ const Homepage = () => {
 		setGameUsername(username);
 
 		// redirect to game
-		navigate(`/games/${game}`);
+		if (customGame) {
+			navigate(`/games/${customGame}`);
+		} else {
+			navigate(`/games/${game}`);
+		}
+
+		socket.emit("update-list");
 	};
 
 	socket.on("new-game-list", () => {
@@ -40,10 +47,11 @@ const Homepage = () => {
 	}, [socket]);
 
 	return (
-		<loginPage>
+		<div className="loginPage">
 			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
-				<h1>Battleship Multiplayer Game</h1>
+				<h1 className="login-header">Battleship Multiplayer Game</h1>
+
 				<Form onSubmit={handleSubmit}>
 					<Form.Group className="loginForm" controlId="username">
 						{/* <Form.Label>Username</Form.Label> */}
@@ -55,16 +63,44 @@ const Homepage = () => {
 							value={username}
 						/>
 					</Form.Group>
+				
 
-					<Form.Group className="chooseRoom" controlId="game">
-						{/* <Form.Label>Game</Form.Label> */}
+					<Form.Group className="chooseRoom" controlId="custom-game">
+						{/* <Form.Label>Create custom game</Form.Label> */}
+						<Form.Control
+							onChange={(e) => setCustomGame(e.target.value)}
+							placeholder="Name of custom game..."
+							type="text"
+							value={customGame}
+						/>
+
+						<div className="btn-join">
+							<Button
+								variant="success"
+								type="submit"
+								className="w-100"
+								disabled={!username || !customGame}
+							>
+								Create custom game
+							</Button>
+						</div>
+					</Form.Group>
+					
+					<Form.Group className="createRoom" controlId="game">
+						{/* <Form.Label>Open games</Form.Label> */}
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
-							required
 							value={game}
+							disabled={customGame}
 						>
 							{gamelist.length === 0 && (
 								<option disabled>Loading...</option>
+							)}
+
+							{customGame && (
+								<option disabled>
+									Custom game already chosen
+								</option>
 							)}
 							{gamelist.length && (
 								<>
@@ -79,21 +115,22 @@ const Homepage = () => {
 								</>
 							)}
 						</Form.Select>
-					</Form.Group>
 
-					<div className="btn-join">
+						<div className="btn-join">
 						<Button
 							variant="success"
 							type="submit"
 							className="w-100"
 							disabled={!username || !game}
 						>
-							Join
+							Join open game
 						</Button>
-					</div>
+						</div>
+
+					</Form.Group>		
 				</Form>
 			</div>
-		</loginPage>
+		</div>	
 	);
 };
 

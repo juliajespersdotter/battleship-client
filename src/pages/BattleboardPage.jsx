@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
@@ -46,11 +47,12 @@ const BattleboardPage = () => {
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
 
 	return (
-		<>
-			<h1>Gamepage</h1>
+		<div className="gamewrapper">
+			<h1 className="game-header">Gamepage</h1>
 
 			<div id="players">
 				<h2>Players in this room:</h2>
@@ -64,9 +66,14 @@ const BattleboardPage = () => {
 			</div>
 
 			{waiting && <p>Waiting for player...</p>}
-			<Battleboard />
-			{!waiting && <p>Game is starting!</p>}
-		</>
+
+			{!waiting && (
+				<>
+					<p>Game is starting!</p>
+					<Battleboard />
+				</>
+			)}
+		</div>
 	);
 };
 
