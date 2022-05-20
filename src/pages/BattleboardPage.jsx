@@ -55,11 +55,11 @@ const BattleboardPage = () => {
 		<div className="gamewrapper">
 
 			<div className="game-header">
-				<h1 className="game-title">Gamepage</h1>
+				<h1 className="game-tagline">Let's Battleship</h1>
 
 				<div id="players">
-					<h2>Players in this room:</h2>
-					<ul id="online-players">
+					<h2>Players:</h2>
+					<ul className="online-players">
 						{Object.values(players).map((player, index) => (
 							<li key={index}>
 								<span className="user-icon">🚢</span> {player}
