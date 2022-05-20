@@ -48,7 +48,7 @@ const BattleboardPage = () => {
 		return () => {
 			console.log("Running cleanup");
 
-			socket.off("player:list", handleUpdatePlayers);
+			// socket.off("player:list", handleUpdatePlayers);
 
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
