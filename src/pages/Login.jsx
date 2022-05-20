@@ -3,12 +3,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
+import { uniqueNamesGenerator, animals } from "unique-names-generator";
 import "../assets/css/login.css";
 
 const Login = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
-	const [customGame, setCustomGame] = useState("");
+	const [generateRoom, setGenerateRoom] = useState(false);
+	// const [customGame, setCustomGame] = useState("");
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -19,7 +21,21 @@ const Login = () => {
 		// set game username
 		setGameUsername(username);
 
+		if (generateRoom) {
+			console.log(generateRoom);
+			const randomName = uniqueNamesGenerator({
+				dictionaries: [animals],
+				separator: "-",
+				length: 1,
+			});
+			console.log(randomName);
+			navigate(`/games/${randomName}`);
+		} else if (game) {
+			navigate(`/games/${game}`);
+		}
+
 		// redirect to game
+		/*
 		if (customGame) {
 			console.log(customGame);
 			socket.emit("check-games", customGame, (status) => {
@@ -27,9 +43,7 @@ const Login = () => {
 					? navigate(`/games/${customGame}`)
 					: alert("game name cannot be same as open game");
 			});
-		} else if (game) {
-			navigate(`/games/${game}`);
-		}
+		*/
 
 		socket.emit("update-list");
 	};
@@ -37,7 +51,6 @@ const Login = () => {
 	socket.on("new-game-list", () => {
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
-			console.log(list);
 			setGamelist(list);
 		});
 	});
@@ -71,8 +84,7 @@ const Login = () => {
 						/>
 					</Form.Group>
 
-					<Form.Group className="chooseRoom" controlId="custom-game">
-						{/* <Form.Label>Create custom game</Form.Label> */}
+					{/* <Form.Group className="chooseRoom" controlId="custom-game">
 						<Form.Control
 							onChange={(e) => setCustomGame(e.target.value)}
 							placeholder="Name of custom game..."
@@ -80,28 +92,13 @@ const Login = () => {
 							value={customGame}
 						/>
 
-						<div className="btn-join">
-							<Button
-								variant="success"
-								type="submit"
-								className="w-100"
-								disabled={
-									!username ||
-									!customGame ||
-									!customGame.trim()
-								}
-							>
-								Create custom game
-							</Button>
-						</div>
-					</Form.Group>
+						</Form.Group> */}
 
 					<Form.Group className="createRoom" controlId="game">
 						{/* <Form.Label>Open games</Form.Label> */}
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							value={game}
-							disabled={customGame}
 						>
 							{!gamelist && <option disabled>Loading...</option>}
 
@@ -127,6 +124,18 @@ const Login = () => {
 								disabled={!username || !game}
 							>
 								Join open game
+							</Button>
+						</div>
+
+						<div className="btn-join">
+							<Button
+								variant="success"
+								type="submit"
+								className="w-100"
+								onClick={() => setGenerateRoom(true)}
+								disabled={game}
+							>
+								Generate new game room
 							</Button>
 						</div>
 					</Form.Group>
