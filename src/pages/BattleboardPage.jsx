@@ -30,6 +30,7 @@ const BattleboardPage = () => {
 		// if no username, redirect them to the login page
 		if (!gameUsername) {
 			navigate("/");
+			return;
 		}
 
 		// emit join request
@@ -46,6 +47,8 @@ const BattleboardPage = () => {
 
 		return () => {
 			console.log("Running cleanup");
+
+			socket.off("player:list", handleUpdatePlayers);
 
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
