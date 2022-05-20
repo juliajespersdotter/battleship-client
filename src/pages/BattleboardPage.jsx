@@ -20,6 +20,9 @@ const BattleboardPage = () => {
 		if (Object.keys(playerlist).length === 2) {
 			setWaiting(false);
 			socket.emit("update-list");
+		} else if (Object.keys(playerlist).length === 1) {
+			setWaiting(true);
+			socket.emit("update-list");
 		}
 	};
 
@@ -28,6 +31,7 @@ const BattleboardPage = () => {
 		// if no username, redirect them to the login page
 		if (!gameUsername) {
 			navigate("/");
+			return;
 		}
 
 		// emit join request
@@ -45,10 +49,12 @@ const BattleboardPage = () => {
 		return () => {
 			console.log("Running cleanup");
 
+			// socket.off("player:list", handleUpdatePlayers);
+
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
-		 // eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
 
 	return (
@@ -70,11 +76,11 @@ const BattleboardPage = () => {
 
 				{waiting && <p>Waiting for player...</p>}
 			</div>	
-			<Battleboard />
+
 			{!waiting && (
 				<>
 					<p>Game is starting!</p>
-					{/* <Battleboard /> */}
+					<Battleboard />
 				</>
 			)}
 		</div>
