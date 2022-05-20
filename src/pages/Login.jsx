@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import "../assets/css/login.css";
 
-const Homepage = () => {
+const Login = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
 	const [customGame, setCustomGame] = useState("");
@@ -27,7 +27,7 @@ const Homepage = () => {
 					? navigate(`/games/${customGame}`)
 					: alert("game name cannot be same as open game");
 			});
-		} else {
+		} else if (game) {
 			navigate(`/games/${game}`);
 		}
 
@@ -136,4 +136,4 @@ const Homepage = () => {
 	);
 };
 
-export default Homepage;
+export default Login;
