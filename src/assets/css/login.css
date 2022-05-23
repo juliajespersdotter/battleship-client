@@ -39,13 +39,18 @@ form {
 
 .loginForm form-control {
 	margin: 0 0 16px 0;
+	font-weight: 700;
 }
 
-.createRoom,
-.chooseRoom {
+.createRoom {
 	padding: 0 50px;
 }
 
 .btn-join {
-	margin: 0 0 16px 0;
+	margin: 0 0 25px 0;
+}
+
+.form-control,
+.form-select {
+	font-weight: 700;
 }

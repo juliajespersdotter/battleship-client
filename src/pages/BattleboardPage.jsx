@@ -68,7 +68,7 @@ const BattleboardPage = () => {
 					<ul className="online-players">
 						{Object.values(players).map((player, index) => (
 							<li key={index}>
-								<span className="user-icon">🚢</span> {player}
+								<span className="user-icon"></span> {player}
 							</li>
 						))}
 					</ul>
