@@ -48,6 +48,7 @@ const Login = () => {
 		socket.emit("update-list");
 	};
 
+	// change this???
 	socket.on("new-game-list", () => {
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
@@ -109,7 +110,9 @@ const Login = () => {
 									</option>
 									{gamelist.map((game) => (
 										<option key={game.id} value={game.id}>
-											{game.name}
+											{game.name}{" "}
+											{Object.keys(game.players).length} /
+											2
 										</option>
 									))}
 								</>
