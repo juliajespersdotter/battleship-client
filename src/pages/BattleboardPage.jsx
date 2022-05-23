@@ -19,6 +19,9 @@ const BattleboardPage = () => {
 		if (Object.keys(playerlist).length === 2) {
 			setWaiting(false);
 			socket.emit("update-list");
+		} else if (Object.keys(playerlist).length === 1) {
+			setWaiting(true);
+			socket.emit("update-list");
 		}
 	};
 
@@ -27,6 +30,7 @@ const BattleboardPage = () => {
 		// if no username, redirect them to the login page
 		if (!gameUsername) {
 			navigate("/");
+			return;
 		}
 
 		// emit join request
@@ -43,6 +47,8 @@ const BattleboardPage = () => {
 
 		return () => {
 			console.log("Running cleanup");
+
+			// socket.off("player:list", handleUpdatePlayers);
 
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
