@@ -215,10 +215,10 @@ const Battleboard = () => {
             <div className="game-board game-board-enemy">
                <h3 className="game-title game-title-you">Enemy</h3>
                <p className={winner}>Congrats! You win!</p>
+               <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                <div className="game-wrapper game-wrapper-enemy">
                <Gameboard  squares={boardEnemy} onClick={handleClick}/>
                 </div>
-                <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                </div>
                 <div className="game-board game-board-you">
                     <h3 className="game-title game-title-you">You</h3>
