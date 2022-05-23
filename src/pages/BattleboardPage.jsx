@@ -64,7 +64,7 @@ const BattleboardPage = () => {
 				<h1 className="game-tagline">Let's Battleship</h1>
 
 				<div id="players">
-					<h2>Players:</h2>
+					<h2>Players</h2>
 					<ul className="online-players">
 						{Object.values(players).map((player, index) => (
 							<li key={index}>

@@ -88,3 +88,6 @@
     display: block;
 }
 
+.btn-success {
+    font-weight: 700;
+}
