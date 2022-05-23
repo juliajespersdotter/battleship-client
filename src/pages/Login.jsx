@@ -110,7 +110,7 @@ const Login = () => {
 									</option>
 									{gamelist.map((game) => (
 										<option key={game.id} value={game.id}>
-											{game.name}{" "}
+											{game.name} game{" "}
 											{Object.keys(game.players).length} /
 											2
 										</option>
