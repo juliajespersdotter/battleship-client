@@ -1,4 +1,4 @@
-import loading from "../assets/images/water_loader.gif"
+import loading from "../assets/images/water-loading2.gif"
 import "../assets/css/WaitingRoom.css"
 
 const WaitingRoom = () => {

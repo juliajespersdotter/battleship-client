@@ -63,10 +63,13 @@ const BattleboardPage = () => {
 		<div className="gamewrapper">
 
 			<div className="game-header">
-				<h1 className="game-tagline">Let's Battleship</h1>
 
-				<div className="room-name">
-					<p className="room-name-tagline">Game Room: {game_id}</p>
+				<div className="game-header-title">
+					<h1 className="game-tagline">Let's Battleship</h1>
+
+					<div className="room-name">
+						<p className="room-name-tagline">Game Room: {game_id}</p>
+					</div>
 				</div>
 
 				<div id="players">

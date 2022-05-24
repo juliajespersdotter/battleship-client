@@ -4,7 +4,7 @@
 }
 
 .gamewrapper {
-	background: url(../images/gameBG.png);
+	background: url(../images/gameBG2.jpeg);
 	background-size: cover;
 	background-position: center;
 	min-height: 100vh;
@@ -37,6 +37,7 @@
 .online-players {
 	list-style: none;
     display: flex;
+	padding: 0;
 }
 
 .online-players li {
@@ -54,9 +55,16 @@ p {
 	text-align: center;
 }
 
-.room-name {
-	border: solid;
+.game-header-title {
+	display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
 }
+
+.room-name {
+	display: flex;
+}
+
 .room-name-tagline {
-	
+	margin-top: auto;
 }
