@@ -13,7 +13,7 @@ const Battleboard = () => {
     const [shipThree, setShipThree] = useState([]);
     const [shipFour, setShipFour] = useState([]);
     const [shipRemain, setShipRemain] = useState([]);
-    const [winner, setWinner] = useState('hide');
+    // const [winner, setWinner] = useState('hide');
 
     const [boardEnemy, setBoardEnemy] = useState(Array(100).fill(null));
     const [shipTwoEnemy, setShipTwoEnemy] = useState([]);
@@ -21,9 +21,12 @@ const Battleboard = () => {
     const [shipThreeEnemy, setShipThreeEnemy] = useState([]);
     const [shipFourEnemy, setShipFourEnemy] = useState([]);
     const [shipRemainEnemy, setShipRemainEnemy] = useState([]);
-    // const [winnerEnemy, setWinnerEnemy] = useState('hide');
-
+    const [winnerEnemy, setWinnerEnemy] = useState('hide');
   
+    const [hitShip, setHitShip] = useState([]);
+    const [missedShip, setMissedShip] = useState([]);
+    
+    // const [missedShip, setMissedShip] = [{}];
 
     const [startGame, setStartGame] = useState(false);
 
@@ -125,47 +128,81 @@ const Battleboard = () => {
         }
        
     }
+const handleEnemyClick = (index) => {
 
    
-
-    useEffect(() => {
-        if(startGame === false) {
-            setShips()
-        }
-       if(startGame === true) {
-        socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
-            console.log('sent data:', shipp1, shipp2, shipp3, shipp4);
-            let boardCopyEnemy = [...boardEnemy];
-            setShipTwoEnemy(shipp1);
-            boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
-            boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
-            setShipTwoSecondEnemy(shipp2);
-            boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
-            boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
-            setShipThreeEnemy(shipp3);
-            boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
-            boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
-            boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
-            setShipFourEnemy(shipp4);
-            boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
-            boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
-            boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
-            boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
-            setBoardEnemy(boardCopyEnemy);
-        })
-       }
-       socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
+    let boardCopy = [...board];
+    const whichShip = boardCopy[index];
+    console.log('whichship', whichShip)
+    if(boardCopy[index] !== null){
+        boardCopy[index] = "hitShip";
+        if(whichShip === 'ship3'){
+            if(shipThree.indexOf(index) !== -1){
+    
+                const shipIndex = shipThree.indexOf(index);
+                shipThree.splice(shipIndex,1);
+                if(shipThree.length === 0){
+                    shipRemain.pop();
+                }
+              }
+              console.log('shipThree', shipThree)
+              console.log('shipremain', shipRemain)
+            }
+    }
+    if(boardCopy[index] === null){
+        boardCopy[index] = "missShip";
+    }
+  
+       setBoard(boardCopy);
+       setHitShip([]);
        
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [startGame])
+}
 
+
+
+   useEffect(() => {
+
+    if(startGame === false) {
+        setShips()
+    }
+
+   if(startGame === true) {
+    socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
+        let boardCopyEnemy = [...boardEnemy];
+        setShipTwoEnemy(shipp1);
+        boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
+        boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
+        setShipTwoSecondEnemy(shipp2);
+        boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
+        boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
+        setShipThreeEnemy(shipp3);
+        boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
+        setShipFourEnemy(shipp4);
+        boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
+        setBoardEnemy(boardCopyEnemy);
+    })
+    setStartGame(null);
+   }
+   socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [startGame])
+
+
+  
+    socket.on('get-enemy-click-hit', handleEnemyClick)
 
     const handleClick = i => {
 
         const boardCopy = [...boardEnemy];
         
         if(boardCopy[i] !== null) {
-           
+            hitShip[0] = game_id;
+            hitShip[1] = i;
             if(boardCopy[i] === 'ship3Enemy'){
                 boardCopy[i] = "hitShip";
                 const index = shipThreeEnemy.indexOf(i);
@@ -199,11 +236,15 @@ const Battleboard = () => {
                 } 
             }
             if(shipRemainEnemy.length === 0) {
-                    setWinner('winner')
+                    setWinnerEnemy('winner')
             }
+            
+            socket.emit('click-data-hit', hitShip);
+            
         }
         else {
             boardCopy[i] = "missShip";
+            socket.emit('click-data-hit', missedShip);
         }
         
         setBoardEnemy(boardCopy);
@@ -214,7 +255,7 @@ const Battleboard = () => {
             <div className="game-container">
             <div className="game-board game-board-enemy">
                <h3 className="game-title game-title-you">Enemy</h3>
-               <p className={winner}>Congrats! You win!</p>
+               <p className={winnerEnemy}>Congrats! You win!</p>
                <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                <div className="game-wrapper game-wrapper-enemy">
                <Gameboard  squares={boardEnemy} onClick={handleClick}/>
@@ -222,10 +263,10 @@ const Battleboard = () => {
                </div>
                 <div className="game-board game-board-you">
                     <h3 className="game-title game-title-you">You</h3>
-                    <p className={winner}>Congrats! You win!</p>
+                    {/* <p className={winner}>Congrats! You win!</p> */}
                     <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemain.length}</span></p>
                     <div className="game-wrapper game-wrapper-you">
-                        <Gameboard squares={board} />
+                        <Gameboard squares={board}/>
                     </div>
                     
                 </div>
