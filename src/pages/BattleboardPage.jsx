@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import WaitingRoom from "./WaitingRoom";
 import 'normalize.css';
 import "../assets/css/BattleboardPage.css"
+
 
 const BattleboardPage = () => {
 	const [players, setPlayers] = useState([]);
@@ -63,6 +65,10 @@ const BattleboardPage = () => {
 			<div className="game-header">
 				<h1 className="game-tagline">Let's Battleship</h1>
 
+				<div className="room-name">
+					<p className="room-name-tagline">Game Room: {game_id}</p>
+				</div>
+
 				<div id="players">
 					<h2>Players</h2>
 					<ul className="online-players">
@@ -74,7 +80,11 @@ const BattleboardPage = () => {
 					</ul>
 				</div>
 
-				{waiting && <p>Waiting for player...</p>}
+				{waiting && (
+					<div>
+						<WaitingRoom />
+					</div>
+				)}
 			</div>	
 
 			{!waiting && (

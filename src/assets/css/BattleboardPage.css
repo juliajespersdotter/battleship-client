@@ -53,3 +53,10 @@ p {
 	font-size: 2em;
 	text-align: center;
 }
+
+.room-name {
+	border: solid;
+}
+.room-name-tagline {
+	
+}
