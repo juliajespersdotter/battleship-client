@@ -219,7 +219,7 @@ const Battleboard = () => {
 		const boardCopy = [...boardEnemy];
 		const clickedShip = boardCopy[clickedSquare];
 
-		if (clickedShip !== null) {
+		if (clickedShip !== null && clickedShip !== "missShip") {
 			// hitShip[0] = game_id;
 			boardCopy[clickedSquare] = "hitShip";
 
@@ -281,7 +281,10 @@ const Battleboard = () => {
 		let boardCopy = [...board];
 		const clickedShip = boardCopy[attackClick];
 		// console.log("whichship", whichShip);
-		if (boardCopy[attackClick] !== null) {
+		if (
+			boardCopy[attackClick] !== null &&
+			boardCopy[attackClick] !== "missShip"
+		) {
 			boardCopy[attackClick] = "hitShip";
 			console.log("hit ship", clickedShip);
 			if (clickedShip === "ship3") {
