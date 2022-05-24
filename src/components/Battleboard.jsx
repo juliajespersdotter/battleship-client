@@ -5,8 +5,9 @@ import { useParams } from "react-router-dom";
 import { render } from "@testing-library/react";
 
 const Battleboard = () => {
-	const { socket } = useGameContext();
+	const { socket, gameUsername } = useGameContext();
 	const { game_id } = useParams();
+	const [playerTurn, setPlayerTurn] = useState("");
 
 	const [board, setBoard] = useState(Array(100).fill(null));
 	const [shipTwo, setShipTwo] = useState([]);
@@ -25,8 +26,8 @@ const Battleboard = () => {
 	const [winnerEnemy, setWinnerEnemy] = useState("hide");
 	const [renderBoards, setRenderBoards] = useState(false);
 
-	const [hitShip, setHitShip] = useState(null);
-	const [missedShip, setMissedShip] = useState(null);
+	// const [hitShip, setHitShip] = useState(null);
+	// const [missedShip, setMissedShip] = useState(null);
 
 	// const [missedShip, setMissedShip] = [{}];
 
@@ -46,6 +47,7 @@ const Battleboard = () => {
 				shipFour: shipFour,
 			});
 			setRenderBoards(true);
+			setPlayerTurn(gameUsername);
 			setStartGame(null);
 		}
 		// need to fix dependency array
@@ -213,42 +215,51 @@ const Battleboard = () => {
 		//if not your turn , return and dont register click
 
 		// if
-
+		console.log("clicked square:", clickedSquare);
 		const boardCopy = [...boardEnemy];
+		const clickedShip = boardCopy[clickedSquare];
 
-		if (boardCopy[clickedSquare] !== null) {
+		if (clickedShip !== null) {
 			// hitShip[0] = game_id;
+			boardCopy[clickedSquare] = "hitShip";
 
-			if (boardCopy[clickedSquare] === "ship3Enemy") {
-				boardCopy[clickedSquare] = "hitShip";
-				const index = shipThreeEnemy.indexOf(clickedSquare);
-				shipThreeEnemy.splice(index, 1);
-				if (shipThreeEnemy.length === 0) {
-					shipRemainEnemy.pop();
+			if (clickedShip === "ship3Enemy") {
+				if (shipThreeEnemy.indexOf(clickedSquare) !== -1) {
+					const index = shipThreeEnemy.indexOf(clickedSquare);
+					shipThreeEnemy.splice(index, 1);
+					if (shipThreeEnemy.length === 0) {
+						shipRemainEnemy.pop();
+					}
 				}
 			}
-			if (boardCopy[clickedSquare] === "ship4Enemy") {
-				boardCopy[clickedSquare] = "hitShip";
-				const index = shipFourEnemy.indexOf(clickedSquare);
-				shipFourEnemy.splice(index, 1);
-				if (shipFourEnemy.length === 0) {
-					shipRemainEnemy.pop();
+			if (clickedShip === "ship4Enemy") {
+				// clickedShip = "hitShip";
+				if (shipFourEnemy.indexOf(clickedSquare) !== -1) {
+					const index = shipFourEnemy.indexOf(clickedSquare);
+					shipFourEnemy.splice(index, 1);
+					if (shipFourEnemy.length === 0) {
+						shipRemainEnemy.pop();
+					}
 				}
 			}
-			if (boardCopy[clickedSquare] === "ship2Enemy") {
-				boardCopy[clickedSquare] = "hitShip";
-				const index = shipTwoEnemy.indexOf(clickedSquare);
-				shipTwoEnemy.splice(index, 1);
-				if (shipTwoEnemy.length === 0) {
-					shipRemainEnemy.pop();
+			if (clickedShip === "ship2Enemy") {
+				// clickedShip = "hitShip";
+				if (shipTwoEnemy.indexOf(clickedSquare) !== -1) {
+					const index = shipTwoEnemy.indexOf(clickedSquare);
+					shipTwoEnemy.splice(index, 1);
+					if (shipTwoEnemy.length === 0) {
+						shipRemainEnemy.pop();
+					}
 				}
 			}
-			if (boardCopy[clickedSquare] === "ship2SecondEnemy") {
-				boardCopy[clickedSquare] = "hitShip";
-				const index = shipTwoSecondEnemy.indexOf(clickedSquare);
-				shipTwoSecondEnemy.splice(index, 1);
-				if (shipTwoSecondEnemy.length === 0) {
-					shipRemainEnemy.pop();
+			if (clickedShip === "ship2SecondEnemy") {
+				// clickedShip = "hitShip";
+				if (shipTwoSecondEnemy.indexOf(clickedSquare) !== -1) {
+					const index = shipTwoSecondEnemy.indexOf(clickedSquare);
+					shipTwoSecondEnemy.splice(index, 1);
+					if (shipTwoSecondEnemy.length === 0) {
+						shipRemainEnemy.pop();
+					}
 				}
 			}
 			if (shipRemainEnemy.length === 0) {
@@ -256,7 +267,7 @@ const Battleboard = () => {
 				// setRenderBoards(false);
 			}
 		}
-		if (boardCopy[clickedSquare] === null) {
+		if (clickedShip === null) {
 			boardCopy[clickedSquare] = "missShip";
 			// setMissedShip(i);
 		}
@@ -284,7 +295,48 @@ const Battleboard = () => {
 				console.log("shipThree", shipThree);
 				console.log("shipremain", shipRemain);
 			}
+			if (clickedShip === "ship4") {
+				if (shipFour.indexOf(attackClick) !== -1) {
+					const shipIndex = shipFour.indexOf(attackClick);
+					shipFour.splice(shipIndex, 1);
+					if (shipFour.length === 0) {
+						shipRemain.pop();
+					}
+				}
+
+				console.log("shipThree", shipFour);
+				console.log("shipremain", shipRemain);
+			}
+			if (clickedShip === "ship2") {
+				if (shipTwo.indexOf(attackClick) !== -1) {
+					const shipIndex = shipTwo.indexOf(attackClick);
+					shipTwo.splice(shipIndex, 1);
+					if (shipTwo.length === 0) {
+						shipRemain.pop();
+					}
+				}
+
+				console.log("shipThree", shipTwo);
+				console.log("shipremain", shipRemain);
+			}
+			if (clickedShip === "ship2Second") {
+				if (shipTwoSecond.indexOf(attackClick) !== -1) {
+					const shipIndex = shipTwoSecond.indexOf(attackClick);
+					shipTwoSecond.splice(shipIndex, 1);
+					if (shipTwoSecond.length === 0) {
+						shipRemain.pop();
+					}
+				}
+
+				console.log("ship2Second", shipTwoSecond);
+				console.log("shipremain", shipRemain);
+			}
+			if (shipRemain.length === 0) {
+				setWinnerEnemy("winner");
+				// setRenderBoards(false);
+			}
 		}
+
 		if (boardCopy[attackClick] === null) {
 			boardCopy[attackClick] = "missShip";
 			// setMissedShip(i);
