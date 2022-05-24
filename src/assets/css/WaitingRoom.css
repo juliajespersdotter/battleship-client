@@ -1,0 +1,15 @@
+.loadingRoom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loadingRoom-tagline {
+    font-size: 2em;
+    font-weight: 700;
+}
+
+.loadingRoom-img {
+    max-width: 300px;
+
+}
