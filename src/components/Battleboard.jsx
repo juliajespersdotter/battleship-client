@@ -2,6 +2,7 @@ import Gameboard from "./Gameboard";
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
+import { render } from "@testing-library/react";
 
 const Battleboard = () => {
 	const { socket } = useGameContext();
@@ -22,33 +23,14 @@ const Battleboard = () => {
 	const [shipFourEnemy, setShipFourEnemy] = useState([]);
 	const [shipRemainEnemy, setShipRemainEnemy] = useState([]);
 	const [winnerEnemy, setWinnerEnemy] = useState("hide");
+	const [renderBoards, setRenderBoards] = useState(false);
 
-	const [hitShip, setHitShip] = useState([]);
-	const [missedShip, setMissedShip] = useState([]);
+	const [hitShip, setHitShip] = useState(null);
+	const [missedShip, setMissedShip] = useState(null);
 
 	// const [missedShip, setMissedShip] = [{}];
 
 	const [startGame, setStartGame] = useState(false);
-
-	socket.on("get-ship-data", (shipData) => {
-		let boardCopyEnemy = [...boardEnemy];
-		setShipTwoEnemy(shipData.shipTwo);
-		boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
-		boardCopyEnemy[shipData.shipTwo[1]] = "ship2Enemy";
-		setShipTwoSecondEnemy(shipData.shipTwo);
-		boardCopyEnemy[shipData.shipTwoSecond[0]] = "ship2SecondEnemy";
-		boardCopyEnemy[shipData.shipTwoSecond[1]] = "ship2SecondEnemy";
-		setShipThreeEnemy(shipData.shipThree);
-		boardCopyEnemy[shipData.shipThree[0]] = "ship3Enemy";
-		boardCopyEnemy[shipData.shipThree[1]] = "ship3Enemy";
-		boardCopyEnemy[shipData.shipThree[2]] = "ship3Enemy";
-		setShipFourEnemy(shipData.shipFour);
-		boardCopyEnemy[shipData.shipFour[0]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[1]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[2]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
-		setBoardEnemy(boardCopyEnemy);
-	});
 
 	useEffect(() => {
 		if (startGame === false) {
@@ -63,11 +45,14 @@ const Battleboard = () => {
 				shipThree: shipThree,
 				shipFour: shipFour,
 			});
+			setRenderBoards(true);
 			setStartGame(null);
 		}
+		// need to fix dependency array
 	}, [startGame]);
 
 	const getRandomPosition = (array) => {
+		// randomise place on grid where boats should land
 		let random = Math.floor(Math.random() * 100);
 		if (array.length === 10) {
 			if (array.indexOf(random) !== -1) {
@@ -101,6 +86,9 @@ const Battleboard = () => {
 		}
 	};
 
+	/**
+	 *  Ship randomisers
+	 * */
 	const ship2 = () => {
 		const startPos = getRandomPosition([
 			9, 19, 29, 39, 49, 59, 69, 79, 89, 99,
@@ -190,16 +178,17 @@ const Battleboard = () => {
 			}
 		}
 	};
-	const handleEnemyClick = (index) => {
+	/*
+	const handleEnemyClick = (i) => {
 		let boardCopy = [...board];
-		const whichShip = boardCopy[index];
+		const clickedShip = boardCopy[i];
 		// console.log("whichship", whichShip);
-		if (boardCopy[index] !== null) {
-			boardCopy[index] = "hitShip";
-			console.log("hit ship", whichShip);
-			if (whichShip === "ship3") {
-				if (shipThree.indexOf(index) !== -1) {
-					const shipIndex = shipThree.indexOf(index);
+		if (boardCopy[i] !== null) {
+			boardCopy[i] = "hitShip";
+			console.log("hit ship", clickedShip);
+			if (clickedShip === "ship3") {
+				if (shipThree.indexOf(i) !== -1) {
+					const shipIndex = shipThree.indexOf(i);
 					shipThree.splice(shipIndex, 1);
 					if (shipThree.length === 0) {
 						shipRemain.pop();
@@ -209,50 +198,54 @@ const Battleboard = () => {
 				console.log("shipremain", shipRemain);
 			}
 		}
-		if (boardCopy[index] === null) {
-			boardCopy[index] = "missShip";
+		if (boardCopy[i] === null) {
+			boardCopy[i] = "missShip";
+			// setMissedShip(i);
+			// socket.emit("click-data-hit", game_id, missedShip);
 		}
 
 		setBoard(boardCopy);
-		setHitShip([]);
+		setHitShip(null);
 	};
+    */
 
-	// listen for enemy click
-	socket.on("get-enemy-click-hit", handleEnemyClick);
+	const handleClick = (clickedSquare) => {
+		//if not your turn , return and dont register click
 
-	const handleClick = (i) => {
+		// if
+
 		const boardCopy = [...boardEnemy];
 
-		if (boardCopy[i] !== null) {
-			hitShip[0] = game_id;
-			hitShip[1] = i;
-			if (boardCopy[i] === "ship3Enemy") {
-				boardCopy[i] = "hitShip";
-				const index = shipThreeEnemy.indexOf(i);
+		if (boardCopy[clickedSquare] !== null) {
+			// hitShip[0] = game_id;
+
+			if (boardCopy[clickedSquare] === "ship3Enemy") {
+				boardCopy[clickedSquare] = "hitShip";
+				const index = shipThreeEnemy.indexOf(clickedSquare);
 				shipThreeEnemy.splice(index, 1);
 				if (shipThreeEnemy.length === 0) {
 					shipRemainEnemy.pop();
 				}
 			}
-			if (boardCopy[i] === "ship4Enemy") {
-				boardCopy[i] = "hitShip";
-				const index = shipFourEnemy.indexOf(i);
+			if (boardCopy[clickedSquare] === "ship4Enemy") {
+				boardCopy[clickedSquare] = "hitShip";
+				const index = shipFourEnemy.indexOf(clickedSquare);
 				shipFourEnemy.splice(index, 1);
 				if (shipFourEnemy.length === 0) {
 					shipRemainEnemy.pop();
 				}
 			}
-			if (boardCopy[i] === "ship2Enemy") {
-				boardCopy[i] = "hitShip";
-				const index = shipTwoEnemy.indexOf(i);
+			if (boardCopy[clickedSquare] === "ship2Enemy") {
+				boardCopy[clickedSquare] = "hitShip";
+				const index = shipTwoEnemy.indexOf(clickedSquare);
 				shipTwoEnemy.splice(index, 1);
 				if (shipTwoEnemy.length === 0) {
 					shipRemainEnemy.pop();
 				}
 			}
-			if (boardCopy[i] === "ship2SecondEnemy") {
-				boardCopy[i] = "hitShip";
-				const index = shipTwoSecondEnemy.indexOf(i);
+			if (boardCopy[clickedSquare] === "ship2SecondEnemy") {
+				boardCopy[clickedSquare] = "hitShip";
+				const index = shipTwoSecondEnemy.indexOf(clickedSquare);
 				shipTwoSecondEnemy.splice(index, 1);
 				if (shipTwoSecondEnemy.length === 0) {
 					shipRemainEnemy.pop();
@@ -260,47 +253,105 @@ const Battleboard = () => {
 			}
 			if (shipRemainEnemy.length === 0) {
 				setWinnerEnemy("winner");
+				// setRenderBoards(false);
 			}
-
-			socket.emit("click-data-hit", hitShip);
-		} else {
-			boardCopy[i] = "missShip";
-			socket.emit("click-data-hit", missedShip);
+		}
+		if (boardCopy[clickedSquare] === null) {
+			boardCopy[clickedSquare] = "missShip";
+			// setMissedShip(i);
 		}
 
+		socket.emit("click-data-hit", game_id, clickedSquare);
 		setBoardEnemy(boardCopy);
 	};
 
+	// listen for enemy click
+	socket.on("get-enemy-click", (attackClick) => {
+		let boardCopy = [...board];
+		const clickedShip = boardCopy[attackClick];
+		// console.log("whichship", whichShip);
+		if (boardCopy[attackClick] !== null) {
+			boardCopy[attackClick] = "hitShip";
+			console.log("hit ship", clickedShip);
+			if (clickedShip === "ship3") {
+				if (shipThree.indexOf(attackClick) !== -1) {
+					const shipIndex = shipThree.indexOf(attackClick);
+					shipThree.splice(shipIndex, 1);
+					if (shipThree.length === 0) {
+						shipRemain.pop();
+					}
+				}
+				console.log("shipThree", shipThree);
+				console.log("shipremain", shipRemain);
+			}
+		}
+		if (boardCopy[attackClick] === null) {
+			boardCopy[attackClick] = "missShip";
+			// setMissedShip(i);
+			// socket.emit("click-data-hit", game_id, missedShip);
+		}
+
+		setBoard(boardCopy);
+		// setHitShip(null);
+		// setMissedShip(null);
+	});
+
+	// Set enemy ship to be the data that was sent from opponent
+	socket.on("get-ship-data", (shipData) => {
+		let boardCopyEnemy = [...boardEnemy];
+		setShipTwoEnemy(shipData.shipTwo);
+		boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
+		boardCopyEnemy[shipData.shipTwo[1]] = "ship2Enemy";
+		setShipTwoSecondEnemy(shipData.shipTwo);
+		boardCopyEnemy[shipData.shipTwoSecond[0]] = "ship2SecondEnemy";
+		boardCopyEnemy[shipData.shipTwoSecond[1]] = "ship2SecondEnemy";
+		setShipThreeEnemy(shipData.shipThree);
+		boardCopyEnemy[shipData.shipThree[0]] = "ship3Enemy";
+		boardCopyEnemy[shipData.shipThree[1]] = "ship3Enemy";
+		boardCopyEnemy[shipData.shipThree[2]] = "ship3Enemy";
+		setShipFourEnemy(shipData.shipFour);
+		boardCopyEnemy[shipData.shipFour[0]] = "ship4Enemy";
+		boardCopyEnemy[shipData.shipFour[1]] = "ship4Enemy";
+		boardCopyEnemy[shipData.shipFour[2]] = "ship4Enemy";
+		boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
+		setBoardEnemy(boardCopyEnemy);
+	});
+
 	return (
 		<>
-			<div className="game-container">
-				<div className="game-board game-board-you">
-					<h3 className="game-title game-title-you">You</h3>
-					{/* <p className={winner}>Congrats! You win!</p> */}
-					<p className="ships-remain-text">
-						Ships remaining:{" "}
-						<span className="ships-remain-text-bold">
-							{shipRemain.length}
-						</span>
-					</p>
-					<div className="game-wrapper game-wrapper-you">
-						<Gameboard squares={board} />
+			{renderBoards && (
+				<div className="game-container">
+					<div className="game-board game-board-you">
+						<h3 className="game-title game-title-you">You</h3>
+						{/* <p className={winner}>Congrats! You win!</p> */}
+						<p className="ships-remain-text">
+							Ships remaining:{" "}
+							<span className="ships-remain-text-bold">
+								{shipRemain.length}
+							</span>
+						</p>
+						<div className="game-wrapper game-wrapper-you">
+							<Gameboard squares={board} />
+						</div>
+					</div>
+					<div className="game-board game-board-enemy">
+						<h3 className="game-title game-title-you">Enemy</h3>
+						<p className={winnerEnemy}>Congrats! You win!</p>
+						<p className="ships-remain-text">
+							Ships remaining:{" "}
+							<span className="ships-remain-text-bold">
+								{shipRemainEnemy.length}
+							</span>
+						</p>
+						<div className="game-wrapper game-wrapper-enemy">
+							<Gameboard
+								squares={boardEnemy}
+								onClick={handleClick}
+							/>
+						</div>
 					</div>
 				</div>
-				<div className="game-board game-board-enemy">
-					<h3 className="game-title game-title-you">Enemy</h3>
-					<p className={winnerEnemy}>Congrats! You win!</p>
-					<p className="ships-remain-text">
-						Ships remaining:{" "}
-						<span className="ships-remain-text-bold">
-							{shipRemainEnemy.length}
-						</span>
-					</p>
-					<div className="game-wrapper game-wrapper-enemy">
-						<Gameboard squares={boardEnemy} onClick={handleClick} />
-					</div>
-				</div>
-			</div>
+			)}
 		</>
 	);
 };
