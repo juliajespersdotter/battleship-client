@@ -24,7 +24,7 @@ const Battleboard = () => {
     const [winnerEnemy, setWinnerEnemy] = useState('hide');
   
     const [hitShip, setHitShip] = useState([]);
-    const [missedShip, setMissedShip] = useState([]);
+    const [missedShip] = useState([]);
     
     // const [missedShip, setMissedShip] = [{}];
 
