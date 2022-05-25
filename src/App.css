@@ -93,3 +93,9 @@
 .btn-success {
     font-weight: 700;
 }
+
+.whose-turn {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 900;
+}

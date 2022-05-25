@@ -58,11 +58,11 @@ const Login = () => {
 
 	// as soon as the component is mounted, request room list
 	useEffect(() => {
-		console.log("Requesting game list from server...");
+		// console.log("Requesting game list from server...");
 
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
-			console.log(list);
+			// console.log(list);
 			setGamelist(list);
 		});
 	}, [socket]);
