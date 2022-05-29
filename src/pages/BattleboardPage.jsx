@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import Loser from "../components/Loser"
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png"
 import 'normalize.css';
@@ -99,8 +100,15 @@ const BattleboardPage = () => {
 			{waiting && (
 					<div>
 						<WaitingRoom />
+						{/* <Loser /> */}
 					</div>
-				)}	
+			)}
+
+			{/* {countdown && (
+					<div className="countdown-timer">
+						<img src={Count} alt="" />
+					</div>
+			)} */}
 				{/* <h1 className="game-tagline">Let's Battleship</h1>
 				{waiting && 
 				<p>Waiting for player...</p>}
@@ -113,7 +121,7 @@ const BattleboardPage = () => {
 					</ul>
 				</div> */}
 				
-				{!waiting && (
+			{!waiting && (
 				<>
 					{/* <p>Game is starting!</p> */}
 					<Battleboard yourName={gameUsername} enemy={enemy}/>

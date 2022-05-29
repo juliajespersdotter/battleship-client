@@ -9,6 +9,7 @@
     padding-bottom: 40px;
     flex-grow: 1;
     align-items: center;
+    flex-direction: row-reverse;
 }
 
 .game-wrapper {
@@ -18,7 +19,8 @@
     margin-top: 1em;
     display: grid;
     grid-template: repeat(10, 1fr) / repeat(10, 1fr);
-    background-color: rgb(201, 221, 250);  
+    background-color: rgb(201, 221, 250); 
+    border: solid; 
 }
 
 .box {
@@ -45,18 +47,22 @@
 
 .ship2 {
     background-color: green;
+    border: green;
 }
 
 .ship2Second {
     background-color: green;
+    border: green;
 }
 
 .ship3 {
     background-color: yellow;
+    border: yellow;
 }
 
 .ship4 {
     background-color: orange;
+    border: orange;
 }
 
 
