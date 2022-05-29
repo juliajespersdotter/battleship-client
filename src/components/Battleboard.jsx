@@ -8,10 +8,11 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
     const { game_id } = useParams();
     
    
-    const [yourTurn, setTurn] = useState();
+    const [turn, setTurn] = useState();
     const [disabled, setDisabled] = useState(true);
 
-
+    const whoEnemy = enemy;
+    const youName = yourName;
   
     const [board, setBoard] = useState(Array(100).fill(null));
     const [shipTwo, setShipTwo] = useState([]);
@@ -31,14 +32,9 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
   
     const [hitShip, setHitShip] = useState([]);
     const [missedShip] = useState([]);
-    
-    // const [missedShip, setMissedShip] = [{}];
 
     const [startGame, setStartGame] = useState(false);
 
-    // const players = [yourName, enemy];
-
-    // let randomPlayer =  Math.floor(Math.random() * 1);
 
     const getRandomPosition = (array) => {
 
@@ -136,40 +132,100 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
                 isReady = false;
             }
         }
+       
     }
 
-
 const handleEnemyClick = (index) => {
-   
+
     let boardCopy = [...board];
     const whichShip = boardCopy[index];
     console.log('whichship', whichShip)
     if(boardCopy[index] !== null){
         boardCopy[index] = "hitShip";
-        if(whichShip === 'ship3'){
-            if(shipThree.indexOf(index) !== -1){
+        // code only for ship 3
+        // if(whichShip === 'ship3'){
+        //     if(shipThree.indexOf(index) !== -1){
     
-                const shipIndex = shipThree.indexOf(index);
-                shipThree.splice(shipIndex,1);
-                if(shipThree.length === 0){
-                    shipRemain.pop();
-                }
-              }
-              console.log('shipThree', shipThree)
-              console.log('shipremain', shipRemain)
-            }
+        //         const shipIndex = shipThree.indexOf(index);
+        //         shipThree.splice(shipIndex,1);
+        //         if(shipThree.length === 0){
+        //             shipRemain.pop();
+        //         }
+        //       }
+        //       console.log('shipThree', shipThree)
+        //       console.log('shipremain', shipRemain)
+        //     }
     }
     if(boardCopy[index] === null){
         boardCopy[index] = "missShip";
     }
-  
        setBoard(boardCopy);
        setHitShip([]);
-       setTurn(yourName);
-       setDisabled(false);
 }
 
-socket.on('get-enemy-click-hit', handleEnemyClick)
+console.log('whoseturn', turn);
+console.log('disabled', disabled)
+console.log('whoEnemy', whoEnemy)
+console.log('yourname', youName)
+
+
+   useEffect(() => {
+
+    if(startGame === false) {
+        setShips()
+    }
+
+   if(startGame === true) {
+    socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
+        let boardCopyEnemy = [...boardEnemy];
+        setShipTwoEnemy(shipp1);
+        boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
+        boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
+        setShipTwoSecondEnemy(shipp2);
+        boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
+        boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
+        setShipThreeEnemy(shipp3);
+        boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
+        setShipFourEnemy(shipp4);
+        boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
+        setBoardEnemy(boardCopyEnemy);
+    })
+
+    setTurn(WhoseTurn);
+    if(WhoseTurn === yourName) {
+        setDisabled(false);
+    }
+    console.log('from useeffect')
+    setStartGame(null);
+   }
+
+
+   socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [startGame])
+
+
+   const handleWhoseTurn = (whoTurn) => {
+    setTurn(whoTurn)
+    console.log('whose turn from emit', whoTurn)
+    if(whoTurn === youName) {
+        setDisabled(false);
+    }
+    else {
+        setDisabled(true);
+    }
+}
+  
+   socket.on('get-whose-turn', handleWhoseTurn);
+   socket.on('get-enemy-click-hit', handleEnemyClick)
+
+    
+
 
     const handleClick = i => {
         if(disabled === false) {
@@ -214,67 +270,24 @@ socket.on('get-enemy-click-hit', handleEnemyClick)
             }
             
             socket.emit('click-data-hit', hitShip);
-            
         }
         else {
             boardCopy[i] = "missShip";
             socket.emit('click-data-hit', missedShip);
         }
         setBoardEnemy(boardCopy);
-        setTurn(enemy);
+        setTurn(whoEnemy);
         setDisabled(true);
+        socket.emit('whose-turn', whoEnemy, game_id)
+        console.log('whose turn from your click', turn)
         }
+        
         
     }
 
-
-
-   useEffect(() => {
-
-    if(startGame === false) {
-        setShips()
-    }
-
-   if(startGame === true) {
-    socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
-        let boardCopyEnemy = [...boardEnemy];
-        setShipTwoEnemy(shipp1);
-        boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
-        boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
-        setShipTwoSecondEnemy(shipp2);
-        boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
-        boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
-        setShipThreeEnemy(shipp3);
-        boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
-        boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
-        boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
-        setShipFourEnemy(shipp4);
-        boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
-        setBoardEnemy(boardCopyEnemy);
-    })
-    
-    setStartGame(null);
-   }
-   socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [startGame])
-
-   useEffect(() => {
-    setTurn(WhoseTurn);
-    if(WhoseTurn === yourName) {
-        setDisabled(false);
-    }
-   }, [WhoseTurn, yourName]);
-
-  
-    
-
     return (
         <>
-            <h2 className="whose-turn">Whose turn? {yourTurn}</h2>
+            <h2 className="whose-turn">Whose turn? {turn}</h2>
             <div className="game-container">
                
             <div className="game-board game-board-enemy">
@@ -302,4 +315,3 @@ socket.on('get-enemy-click-hit', handleEnemyClick)
 
 export default Battleboard;
 
-// onClick={ disabled ? null : handleClick}/>
