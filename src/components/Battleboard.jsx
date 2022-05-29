@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
 
-const Battleboard = ({yourName, enemy}) => {
+const Battleboard = ({yourName, enemy, WhoseTurn}) => {
     const { socket } = useGameContext();
     const { game_id } = useParams();
     
    
-    const [yourTurn] = useState(yourName);
-    const [disabled] = useState(true);
+    const [yourTurn, setTurn] = useState();
+    const [disabled, setDisabled] = useState(true);
 
 
   
@@ -36,8 +36,9 @@ const Battleboard = ({yourName, enemy}) => {
 
     const [startGame, setStartGame] = useState(false);
 
+    // const players = [yourName, enemy];
 
-
+    // let randomPlayer =  Math.floor(Math.random() * 1);
 
     const getRandomPosition = (array) => {
 
@@ -135,10 +136,10 @@ const Battleboard = ({yourName, enemy}) => {
                 isReady = false;
             }
         }
-       
     }
-const handleEnemyClick = (index) => {
 
+
+const handleEnemyClick = (index) => {
    
     let boardCopy = [...board];
     const whichShip = boardCopy[index];
@@ -164,51 +165,15 @@ const handleEnemyClick = (index) => {
   
        setBoard(boardCopy);
        setHitShip([]);
-       
+       setTurn(yourName);
+       setDisabled(false);
 }
 
-
-
-   useEffect(() => {
-
-    if(startGame === false) {
-        setShips()
-    }
-
-   if(startGame === true) {
-    socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
-        let boardCopyEnemy = [...boardEnemy];
-        setShipTwoEnemy(shipp1);
-        boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
-        boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
-        setShipTwoSecondEnemy(shipp2);
-        boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
-        boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
-        setShipThreeEnemy(shipp3);
-        boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
-        boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
-        boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
-        setShipFourEnemy(shipp4);
-        boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
-        boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
-        setBoardEnemy(boardCopyEnemy);
-    })
-    setStartGame(null);
-   }
-   socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [startGame])
-
-
-  
-    socket.on('get-enemy-click-hit', handleEnemyClick)
+socket.on('get-enemy-click-hit', handleEnemyClick)
 
     const handleClick = i => {
-
+        if(disabled === false) {
         const boardCopy = [...boardEnemy];
-        
         if(boardCopy[i] !== null) {
             hitShip[0] = game_id;
             hitShip[1] = i;
@@ -255,9 +220,57 @@ const handleEnemyClick = (index) => {
             boardCopy[i] = "missShip";
             socket.emit('click-data-hit', missedShip);
         }
-        
         setBoardEnemy(boardCopy);
+        setTurn(enemy);
+        setDisabled(true);
+        }
+        
     }
+
+
+
+   useEffect(() => {
+
+    if(startGame === false) {
+        setShips()
+    }
+
+   if(startGame === true) {
+    socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
+        let boardCopyEnemy = [...boardEnemy];
+        setShipTwoEnemy(shipp1);
+        boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
+        boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
+        setShipTwoSecondEnemy(shipp2);
+        boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
+        boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
+        setShipThreeEnemy(shipp3);
+        boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
+        boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
+        setShipFourEnemy(shipp4);
+        boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
+        boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
+        setBoardEnemy(boardCopyEnemy);
+    })
+    
+    setStartGame(null);
+   }
+   socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [startGame])
+
+   useEffect(() => {
+    setTurn(WhoseTurn);
+    if(WhoseTurn === yourName) {
+        setDisabled(false);
+    }
+   }, [WhoseTurn, yourName]);
+
+  
+    
 
     return (
         <>
@@ -269,7 +282,7 @@ const handleEnemyClick = (index) => {
                <p className={winnerEnemy}>Congrats! You win!</p>
                <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                <div className="game-wrapper game-wrapper-enemy">
-               <Gameboard  squares={boardEnemy} onClick={ disabled ? null : handleClick}/>
+               <Gameboard  squares={boardEnemy} onClick={handleClick}/>
                 </div>
                </div>
                 <div className="game-board game-board-you">
@@ -288,3 +301,5 @@ const handleEnemyClick = (index) => {
 }
 
 export default Battleboard;
+
+// onClick={ disabled ? null : handleClick}/>
