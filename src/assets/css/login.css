@@ -1,5 +1,5 @@
 .loginPage {
-	background: url(../images/loginBG.png);
+	background: url(../images/loginbg3.gif);
 	background-size: cover;
 	background-position: center;
 	height: 100vh;
@@ -29,7 +29,7 @@ form {
 .login-header {
 	font-family: 'Zen Loop', cursive;
 	font-weight: 700;
-	font-size: 4rem;
+	font-size: 5em;
 }
 
 .loginForm {
@@ -53,5 +53,5 @@ form {
 .form-control,
 .form-select {
 	font-weight: 700;
-	font-size: 1.3em;
+	font-size: 1.7em;
 }

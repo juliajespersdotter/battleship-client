@@ -13,15 +13,7 @@
 }
 
 .game-header {
-	font-family: 'Zen Loop';
-    font-weight: 700;
-}
-
-.game-tagline {
-	text-align: center;
-    font-size: 4em;
-	font-weight: 700;
-    margin: 0;
+	flex-grow: 1;
 }
 
 #players {
@@ -47,7 +39,11 @@
     padding: 10px 20px;
 	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
 	background-color: rgba(255, 255, 255, 0.15);
-	margin: 0 200px;
+	margin-right: 24px;
+}
+
+.online-players li:last-child {
+	margin: 0;
 }
 
 p {
@@ -57,8 +53,11 @@ p {
 
 .game-header-title {
 	display: flex;
-    flex-direction: row-reverse;
-    justify-content: center;
+    /* flex-direction: row-reverse;
+    justify-content: center; */
+}
+.game-header-title img{
+	width: 80px;
 }
 
 .room-name {

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
 import WaitingRoom from "./WaitingRoom";
+import Logo from "../assets/images/logo.png"
 import 'normalize.css';
 import "../assets/css/BattleboardPage.css"
 
@@ -65,10 +66,10 @@ const BattleboardPage = () => {
 			<div className="game-header">
 
 				<div className="game-header-title">
-					<h1 className="game-tagline">Let's Battleship</h1>
+					 <div className="game-tagline"><img src={Logo} alt="" /></div>
 
 					<div className="room-name">
-						<p className="room-name-tagline">Game Room: {game_id}</p>
+						<p className="room-name-tagline">{game_id}</p>
 					</div>
 				</div>
 
@@ -77,18 +78,18 @@ const BattleboardPage = () => {
 					<ul className="online-players">
 						{Object.values(players).map((player, index) => (
 							<li key={index}>
-								<span className="user-icon"></span> {player}
+								<span className="players">{player}</span> 
 							</li>
 						))}
 					</ul>
 				</div>
+			</div>
 
-				{waiting && (
+			{waiting && (
 					<div>
 						<WaitingRoom />
 					</div>
-				)}
-			</div>	
+				)}	
 
 			{!waiting && (
 				<>
