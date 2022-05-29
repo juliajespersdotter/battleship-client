@@ -3,10 +3,16 @@ import { useEffect, useState } from 'react'
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
 
-const Battleboard = () => {
+const Battleboard = ({yourName, enemy}) => {
     const { socket } = useGameContext();
     const { game_id } = useParams();
+    
+   
+    const [yourTurn] = useState(yourName);
+    const [disabled] = useState(true);
 
+
+  
     const [board, setBoard] = useState(Array(100).fill(null));
     const [shipTwo, setShipTwo] = useState([]);
     const [shipTwoSecond, setShipTwoSecond] = useState([]);
@@ -24,11 +30,14 @@ const Battleboard = () => {
     const [winnerEnemy, setWinnerEnemy] = useState('hide');
   
     const [hitShip, setHitShip] = useState([]);
-    const [missedShip, setMissedShip] = useState([]);
+    const [missedShip] = useState([]);
     
     // const [missedShip, setMissedShip] = [{}];
 
     const [startGame, setStartGame] = useState(false);
+
+
+
 
     const getRandomPosition = (array) => {
 
@@ -252,17 +261,19 @@ const handleEnemyClick = (index) => {
 
     return (
         <>
+            <h2 className="whose-turn">Whose turn? {yourTurn}</h2>
             <div className="game-container">
+               
             <div className="game-board game-board-enemy">
-               <h3 className="game-title game-title-you">Enemy</h3>
+               <h3 className="game-title game-title-you">Enemy: {enemy}</h3>
                <p className={winnerEnemy}>Congrats! You win!</p>
                <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                <div className="game-wrapper game-wrapper-enemy">
-               <Gameboard  squares={boardEnemy} onClick={handleClick}/>
+               <Gameboard  squares={boardEnemy} onClick={ disabled ? null : handleClick}/>
                 </div>
                </div>
                 <div className="game-board game-board-you">
-                    <h3 className="game-title game-title-you">You</h3>
+                    <h3 className="game-title game-title-you">You: {yourName}</h3>
                     {/* <p className={winner}>Congrats! You win!</p> */}
                     <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemain.length}</span></p>
                     <div className="game-wrapper game-wrapper-you">

@@ -8,4 +8,3 @@ const Square = ({value,onClick}) => {
   
 export default Square;
 
-//style={{backgroundColor:value}}
