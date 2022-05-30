@@ -10,42 +10,35 @@ import "../assets/css/BattleboardPage.css"
 
 
 const BattleboardPage = () => {
-	// const [players, setPlayers] = useState([]);
+	const [players, setPlayers] = useState([]);
 	// const [connected, setConnected] = useState(false);
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const [enemy, setEnemy] = useState();
 	const { game_id } = useParams();
 	const navigate = useNavigate();
+	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
 		console.log("Got new playerlist", playerlist);
 		// setPlayers(playerlist);
-		
+		setTurn(Object.values(playerlist)[0]);
+
 		if (Object.keys(playerlist).length === 2) {
-			if(Object.values(playerlist)[0] === gameUsername){
-				
-					setEnemy(Object.values(playerlist)[1])
-				
+			if (Object.values(playerlist)[0] === gameUsername) {
+				setEnemy(Object.values(playerlist)[1]);
+			} else {
+				setEnemy(Object.values(playerlist)[0]);
 			}
-			else {
-				
-					setEnemy(Object.values(playerlist)[0])
-			
-			}
-			
+
 			setWaiting(false);
-			
+
 			socket.emit("update-list");
-			
-			
-		
 		} else if (Object.keys(playerlist).length === 1) {
 			setWaiting(true);
 			socket.emit("update-list");
 		}
 	};
-	
 
 	// connect to room when component is mounted
 	useEffect(() => {
@@ -61,15 +54,13 @@ const BattleboardPage = () => {
 				`Successfully joined ${game_id} as ${gameUsername}`,
 				status
 			);
-		
+
 			// setConnected(true);
 		});
 
 		// listen for updated userlist
-		
+
 		socket.on("player:list", handleUpdatePlayers);
-		
-		
 
 		return () => {
 			console.log("Running cleanup");
@@ -84,7 +75,6 @@ const BattleboardPage = () => {
 
 	return (
 		<div className="gamewrapper">
-
 			<div className="game-header">
 
 				<div className="game-header-title">
@@ -113,6 +103,9 @@ const BattleboardPage = () => {
 				{waiting && 
 				<p>Waiting for player...</p>}
 				<div id="players">
+				<h1 className="game-tagline">Let's Battleship</h1>
+				{waiting && <p>Waiting for player...</p>}
+				{/* <div id="players">
 					<h2>Players</h2>
 					<ul className="online-players">
 						
@@ -120,12 +113,15 @@ const BattleboardPage = () => {
 					<li>Enemy: {enemy}</li>
 					</ul>
 				</div> */}
-				
+
 			{!waiting && (
 				<>
 					{/* <p>Game is starting!</p> */}
-					<Battleboard yourName={gameUsername} enemy={enemy}/>
-				
+					<Battleboard
+						yourName={gameUsername}
+						enemy={enemy}
+						WhoseTurn={turn}
+					/>
 				</>
 			)}
 		</div>	

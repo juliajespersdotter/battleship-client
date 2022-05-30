@@ -34,17 +34,6 @@ const Login = () => {
 			navigate(`/games/${game}`);
 		}
 
-		// redirect to game
-		/*
-		if (customGame) {
-			console.log(customGame);
-			socket.emit("check-games", customGame, (status) => {
-				status.success
-					? navigate(`/games/${customGame}`)
-					: alert("game name cannot be same as open game");
-			});
-		*/
-
 		socket.emit("update-list");
 	};
 
@@ -84,16 +73,6 @@ const Login = () => {
 							value={username}
 						/>
 					</Form.Group>
-
-					{/* <Form.Group className="chooseRoom" controlId="custom-game">
-						<Form.Control
-							onChange={(e) => setCustomGame(e.target.value)}
-							placeholder="Name of custom game..."
-							type="text"
-							value={customGame}
-						/>
-
-						</Form.Group> */}
 
 					<Form.Group className="createRoom" controlId="game">
 						{/* <Form.Label>Open games</Form.Label> */}
