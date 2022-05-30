@@ -261,11 +261,18 @@ const handleEnemyClick = (index) => {
 
     return (
         <>
-            <h2 className="whose-turn">Whose turn? {yourTurn}</h2>
+            <div className="turn-tag">
+                <h2 className="whose-turn">Whose turn?</h2><span className="whose-turn-name">{yourTurn}</span>
+            </div>
+
             <div className="game-container">
                
             <div className="game-board game-board-enemy">
-               <h3 className="game-title game-title-you">Enemy: {enemy}</h3>
+                
+                <div className="username">
+                    <h3 className="game-title">Enemy:</h3> <span className="game-title-you">{enemy}</span>
+                </div>
+               
                <p className={winnerEnemy}>Congrats! You win!</p>
                <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemainEnemy.length}</span></p>
                <div className="game-wrapper game-wrapper-enemy">
@@ -273,7 +280,11 @@ const handleEnemyClick = (index) => {
                 </div>
                </div>
                 <div className="game-board game-board-you">
-                    <h3 className="game-title game-title-you">You: {yourName}</h3>
+
+                    <div className="username">
+                        <h3 className="game-title">You:</h3> <span className="game-title-you">{yourName}</span>
+                    </div>
+                    
                     {/* <p className={winner}>Congrats! You win!</p> */}
                     <p className="ships-remain-text">Ships remaining: <span className="ships-remain-text-bold">{shipRemain.length}</span></p>
                     <div className="game-wrapper game-wrapper-you">
