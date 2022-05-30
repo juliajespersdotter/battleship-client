@@ -2,6 +2,7 @@ import Gameboard from "./Gameboard";
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
+import { click } from "@testing-library/user-event/dist/click";
 // import { render } from "@testing-library/react";
 // import { click } from "@testing-library/user-event/dist/click";
 
@@ -207,7 +208,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		const clickedShip = boardCopy[clickedSquare];
 		console.log("clicked ship:", clickedShip);
 
-		if (clickedShip !== null && clickedShip !== "missShip") {
+		if (
+			clickedShip !== null &&
+			clickedShip !== "missShip" &&
+			clickedShip !== "hitShip"
+		) {
 			boardCopy[clickedSquare] = "hitShip";
 
 			if (clickedShip === "ship3Enemy") {
@@ -239,8 +244,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				// emit the winner to server
 				socket.emit("game-over", gameUsername, game_id);
 			}
-		}
-		if (clickedShip === null) {
+		} else if (clickedShip === null) {
 			boardCopy[clickedSquare] = "missShip";
 		}
 
@@ -270,8 +274,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		const clickedShip = boardCopy[attackClick];
 
 		if (
-			boardCopy[attackClick] !== null &&
-			boardCopy[attackClick] !== "missShip"
+			clickedShip !== null &&
+			clickedShip !== "missShip" &&
+			clickedShip !== "hitShip"
 		) {
 			boardCopy[attackClick] = "hitShip";
 			console.log("hit ship", clickedShip);
@@ -299,9 +304,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			if (shipRemain.length === 0) {
 				setWinnerEnemy(true);
 			}
-		}
-
-		if (boardCopy[attackClick] === null) {
+		} else if (clickedShip === null) {
 			boardCopy[attackClick] = "missShip";
 			// socket.emit("click-data-hit", game_id, missedShip);
 		}
@@ -382,7 +385,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
-										onClick={disabled ? null : handleClick}
+										onClick={disabled ? true : handleClick}
 									/>
 								</div>
 							)}
