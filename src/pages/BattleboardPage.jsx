@@ -13,10 +13,12 @@ const BattleboardPage = () => {
 	const [enemy, setEnemy] = useState();
 	const { game_id } = useParams();
 	const navigate = useNavigate();
+	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
 		console.log("Got new playerlist", playerlist);
-		setPlayers(playerlist);
+		// setPlayers(playerlist);
+		setTurn(Object.values(playerlist)[0]);
 
 		if (Object.keys(playerlist).length === 2) {
 			if (Object.values(playerlist)[0] === gameUsername) {
@@ -85,7 +87,11 @@ const BattleboardPage = () => {
 			{!waiting && (
 				<>
 					{/* <p>Game is starting!</p> */}
-					<Battleboard playerList={players} enemy={enemy} />
+					<Battleboard
+						yourName={gameUsername}
+						enemy={enemy}
+						WhoseTurn={turn}
+					/>
 				</>
 			)}
 		</div>
