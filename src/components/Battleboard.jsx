@@ -264,6 +264,55 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	socket.on("get-whose-turn", handleWhoseTurn);
 	// socket.on("get-enemy-click-hit", handleEnemyClick);
 
+	// listen for enemy click
+	socket.on("get-enemy-click", (attackClick) => {
+		let boardCopy = [...board];
+		const clickedShip = boardCopy[attackClick];
+
+		if (
+			boardCopy[attackClick] !== null &&
+			boardCopy[attackClick] !== "missShip"
+		) {
+			boardCopy[attackClick] = "hitShip";
+			console.log("hit ship", clickedShip);
+			if (clickedShip === "ship3") {
+				shipsRemaining(shipThree, attackClick, shipRemain);
+				console.log("ship3", shipThree);
+				console.log("shipremain", shipRemain);
+			}
+			if (clickedShip === "ship4") {
+				shipsRemaining(shipFour, attackClick, shipRemain);
+				console.log("ship4", shipFour);
+				console.log("shipremain", shipRemain);
+			}
+			if (clickedShip === "ship2") {
+				shipsRemaining(shipTwo, attackClick, shipRemain);
+				console.log("ship2", shipTwo);
+				console.log("shipremain", shipRemain);
+			}
+			if (clickedShip === "ship2Second") {
+				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
+
+				console.log("ship2Second", shipTwoSecond);
+				console.log("shipremain", shipRemain);
+			}
+			if (shipRemain.length === 0) {
+				setWinnerEnemy(true);
+			}
+		}
+
+		if (boardCopy[attackClick] === null) {
+			boardCopy[attackClick] = "missShip";
+			// socket.emit("click-data-hit", game_id, missedShip);
+		}
+
+		setBoard(boardCopy);
+		setTurn(youName);
+		setDisabled(true);
+		socket.emit("whose-turn", youName, game_id);
+		console.log("whose turn from your click", turn);
+	});
+
 	socket.on("get-ship-data", (shipData) => {
 		let boardCopyEnemy = [...boardEnemy];
 		setShipTwoEnemy(shipData.shipTwo);
@@ -321,7 +370,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 
 						<div className="game-board game-board-enemy">
 							<h3 className="game-title game-title-you">
-								Enemy: {enemy}
+								Enemy: {whoEnemy}
 							</h3>
 							<p className="ships-remain-text">
 								Ships remaining:{" "}
