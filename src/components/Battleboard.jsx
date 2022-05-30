@@ -5,10 +5,10 @@ import { useParams } from "react-router-dom";
 // import { render } from "@testing-library/react";
 // import { click } from "@testing-library/user-event/dist/click";
 
-const Battleboard = () => {
+const Battleboard = ({ playerList, enemy }) => {
 	const { socket, gameUsername } = useGameContext();
 	const { game_id } = useParams();
-	// const [playerTurn, setPlayerTurn] = useState("");
+	const [playerTurn, setPlayerTurn] = useState("");
 
 	// const [yourTurn] = useState(yourName);
 	// const [disabled] = useState(true);
@@ -45,8 +45,9 @@ const Battleboard = () => {
 				shipThree: shipThree,
 				shipFour: shipFour,
 			});
+			console.log(playerList);
+			setPlayerTurn(Object.values(playerList)[0]);
 			setRenderBoards(true);
-			// setPlayerTurn(gameUsername);
 			setStartGame(null);
 		}
 		// need to fix dependency array
@@ -319,42 +320,49 @@ const Battleboard = () => {
 	return (
 		<>
 			{renderBoards && (
-				<div className="game-container">
-					<div className="game-board game-board-you">
-						<h3 className="game-title game-title-you">You</h3>
-						{winner && <p>Congrats! You win!</p>}
+				<>
+					<h2 className="whose-turn">Whose turn? {playerTurn}</h2>
+					<div className="game-container">
+						<div className="game-board game-board-you">
+							<h3 className="game-title game-title-you">
+								You: {gameUsername}
+							</h3>
+							{winner && <p>Congrats! You win!</p>}
 
-						{winnerEnemy && <p>You lost..</p>}
-						<p className="ships-remain-text">
-							Ships remaining:{" "}
-							<span className="ships-remain-text-bold">
-								{shipRemain.length}
-							</span>
-						</p>
-						{!winner && !winnerEnemy && (
-							<div className="game-wrapper game-wrapper-you">
-								<Gameboard squares={board} />
-							</div>
-						)}
+							{winnerEnemy && <p>You lost..</p>}
+							<p className="ships-remain-text">
+								Ships remaining:{" "}
+								<span className="ships-remain-text-bold">
+									{shipRemain.length}
+								</span>
+							</p>
+							{!winner && !winnerEnemy && (
+								<div className="game-wrapper game-wrapper-you">
+									<Gameboard squares={board} />
+								</div>
+							)}
+						</div>
+						<div className="game-board game-board-enemy">
+							<h3 className="game-title game-title-you">
+								Enemy: {enemy}
+							</h3>
+							<p className="ships-remain-text">
+								Ships remaining:{" "}
+								<span className="ships-remain-text-bold">
+									{shipRemainEnemy.length}
+								</span>
+							</p>
+							{!winner && !winnerEnemy && (
+								<div className="game-wrapper game-wrapper-enemy">
+									<Gameboard
+										squares={boardEnemy}
+										onClick={handleClick}
+									/>
+								</div>
+							)}
+						</div>
 					</div>
-					<div className="game-board game-board-enemy">
-						<h3 className="game-title game-title-you">Enemy</h3>
-						<p className="ships-remain-text">
-							Ships remaining:{" "}
-							<span className="ships-remain-text-bold">
-								{shipRemainEnemy.length}
-							</span>
-						</p>
-						{!winner && !winnerEnemy && (
-							<div className="game-wrapper game-wrapper-enemy">
-								<Gameboard
-									squares={boardEnemy}
-									onClick={handleClick}
-								/>
-							</div>
-						)}
-					</div>
-				</div>
+				</>
 			)}
 
 			{/*<>
