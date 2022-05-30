@@ -9,7 +9,6 @@
     padding-bottom: 40px;
     flex-grow: 1;
     align-items: center;
-    flex-direction: row-reverse;
 }
 
 .game-wrapper {
@@ -21,6 +20,14 @@
     grid-template: repeat(10, 1fr) / repeat(10, 1fr);
     background-color: rgb(201, 221, 250); 
     border: solid; 
+}
+
+.game-wrapper-enemy .box {
+    cursor: pointer;
+}
+
+.game-wrapper-enemy .box:hover {
+    background-color: #9bc3ff;
 }
 
 .box {
@@ -65,12 +72,12 @@
 
 
 .hitShip {
-    background-image: url(./images/bomb.png);
+    background-image: url(./assets/images/bomb.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 .missShip {
-    background-image: url(./images/xmark.png);
+    background-image: url(./assets/images/xmark.png);
     background-repeat: no-repeat;
     background-position: center;
 }

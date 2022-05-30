@@ -1,4 +1,6 @@
 import Gameboard from "./Gameboard";
+import Loser from "../components/Loser"
+import Victory from "../components/Victory"
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
@@ -315,15 +317,17 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		<>
 			{renderBoards && (
 				<>
-					<h2 className="whose-turn">Whose turn? {turn}</h2>
+					<div className="turn-tag">
+						<h2 className="whose-turn">Whose turn?</h2> <span className="whose-turn-name">{turn}</span>
+					</div>
+
 					<div className="game-container">
 						<div className="game-board game-board-you">
-							<h3 className="game-title game-title-you">
-								You: {gameUsername}
-							</h3>
-							{winner && <p>Congrats! You win!</p>}
-
-							{winnerEnemy && <p>You lost..</p>}
+							<div className="username">
+								<span className="game-title">You: </span>
+								<span className="game-title-you">{gameUsername}</span>
+							</div>
+							
 							<p className="ships-remain-text">
 								Ships remaining:{" "}
 								<span className="ships-remain-text-bold">
@@ -338,9 +342,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						</div>
 
 						<div className="game-board game-board-enemy">
-							<h3 className="game-title game-title-you">
-								Enemy: {whoEnemy}
-							</h3>
+							<div className="username">
+								<span className="game-title">Enemy: </span>
+								<span className="game-title-you">{whoEnemy}</span>
+							</div>
+							
 							<p className="ships-remain-text">
 								Ships remaining:{" "}
 								<span className="ships-remain-text-bold">
@@ -356,6 +362,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								</div>
 							)}
 						</div>
+						{winner && <Victory />}
+						{winnerEnemy && <Loser />}
 					</div>
 				</>
 			)}
