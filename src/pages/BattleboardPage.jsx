@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
-import Loser from "../components/Loser"
+// import Loser from "../components/Loser"
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png"
 import 'normalize.css';
@@ -10,7 +10,7 @@ import "../assets/css/BattleboardPage.css"
 
 
 const BattleboardPage = () => {
-	const [players, setPlayers] = useState([]);
+	// const [players, setPlayers] = useState([]);
 	// const [connected, setConnected] = useState(false);
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();

@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const { socket, gameUsername } = useGameContext();
 	const { game_id } = useParams();
-	const [turn, setTurn] = useState();
+	const [turn, setTurn] = useState(null);
 	const [disabled, setDisabled] = useState(true);
 
 	const whoEnemy = enemy;
@@ -369,8 +369,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
     }
 
     const startGameFunction = () => {
-        setShipRemain([1,2,3,4])
-        setShipRemainEnemy([1,2,3,4])
+       
         if(turn === null){
             setTurn(WhoseTurn);
             if(WhoseTurn === yourName) {
@@ -385,30 +384,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
     setPositions([positionUp, positionRight, positionDown, positionLeft]);
     }, [positionUp, positionRight, positionDown, positionLeft])
 
-    // socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
-    //     console.log('got enemy ship data')
-    //     if(shipp1.length !== 0 && shipp2.length !== 0 && shipp3.length !== 0 && shipp4.length !== 0 && shipTwo.length !== 0 && shipTwoSecond.length !== 0 && shipThree.length !== 0 && shipFour.length !== 0 ) {
-    //     let boardCopyEnemy = [...boardEnemy];
-    //     setShipTwoEnemy(shipp1);
-    //     boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
-    //     boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
-    //     setShipTwoSecondEnemy(shipp2);
-    //     boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
-    //     boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
-    //     setShipThreeEnemy(shipp3);
-    //     boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
-    //     boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
-    //     boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
-    //     setShipFourEnemy(shipp4);
-    //     boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
-    //     boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
-    //     boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
-    //     boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
-    //     setBoardEnemy(boardCopyEnemy);
-    //     socket.emit('player-ready', game_id)
-    //     console.log('got enemy ship data and sending it to socket, players ready')
-    //     }
-    // })
 
     socket.on('start-game', () => {
         console.log('starting game , start-game')
@@ -421,7 +396,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
     useEffect(() => {
     if(startGame === true){
         console.log('call startgame function')
-    startGameFunction();
+        startGameFunction();
+        setShipRemain([1, 2, 3, 4]);
+        setShipRemainEnemy([1, 2, 3, 4]);
     // setStartGame(false);
     }
     if(sendShip === true) {
@@ -460,6 +437,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	};
 
 	const handleClick = (clickedSquare) => {
+        if(disabled === false) {
 		socket.emit("click-data-hit", game_id, clickedSquare);
 		const boardCopy = [...boardEnemy];
 		const clickedShip = boardCopy[clickedSquare];
@@ -470,7 +448,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			clickedShip !== "hitShip"
 		) {
 			boardCopy[clickedSquare] = "hitShip";
-
+            console.log('shipRemainEnemy1', shipRemainEnemy)
 			if (clickedShip === "ship3Enemy") {
 				shipsRemaining(shipThreeEnemy, clickedSquare, shipRemainEnemy);
 				console.log("ship 3 enemy:", shipThreeEnemy);
@@ -490,6 +468,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				);
 			}
 			if (shipRemainEnemy.length === 0) {
+                 console.log('shipRemainEnemy2', shipRemainEnemy)
 				// emit the winner to server
 				socket.emit("game-over", gameUsername, game_id);
 			}
@@ -501,6 +480,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		setTurn(whoEnemy);
 		setDisabled(true);
 		socket.emit("whose-turn", whoEnemy, game_id);
+    }
 	};
 
 	socket.on("get-whose-turn", handleWhoseTurn);
@@ -515,6 +495,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			clickedShip !== "hitShip"
 		) {
 			boardCopy[attackClick] = "hitShip";
+            console.log('shipRemain1', shipRemain)
 			console.log("hit ship", clickedShip);
 			if (clickedShip === "ship3") {
 				shipsRemaining(shipThree, attackClick, shipRemain);
@@ -529,6 +510,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
 			}
 			if (shipRemain.length === 0) {
+                console.log('shipRemain2', shipRemain)
 				setWinnerEnemy(true);
 			}
 		} else if (clickedShip === null) {
@@ -536,13 +518,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 
 		setBoard(boardCopy);
-		setTurn(youName);
-		setDisabled(true);
-		socket.emit("whose-turn", youName, game_id);
 	});
 
 	socket.on("get-ship-data", (shipData) => {
-        if(shipData.shipp1.length !== 0 && shipData.shipp2.length !== 0 && shipData.shipp3.length !== 0 && shipData.shipp4.length !== 0 && shipTwo.length !== 0 && shipTwoSecond.length !== 0 && shipThree.length !== 0 && shipFour.length !== 0 ) {
+       console.log('shipData.shipTwo.length', shipData.shipTwo.length)
+        if(shipData.shipTwo.length !== 0 && shipData.shipTwoSecond.length !== 0 && shipData.shipThree.length !== 0 && shipData.shipFour.length !== 0 && shipTwo.length !== 0 && shipTwoSecond.length !== 0 && shipThree.length !== 0 && shipFour.length !== 0 ) {
 		let boardCopyEnemy = [...boardEnemy];
 		setShipTwoEnemy(shipData.shipTwo);
 		boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
@@ -615,7 +595,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
-										onClick={disabled ? true : handleClick}
+										onClick={handleClick}
 									/>
 								</div>
 							)}
