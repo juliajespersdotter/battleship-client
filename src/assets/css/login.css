@@ -1,5 +1,5 @@
 .loginPage {
-	background: url(../images/loginBG.png);
+	background: url(../images/loginbg3.gif);
 	background-size: cover;
 	background-position: center;
 	height: 100vh;
@@ -17,7 +17,6 @@ form {
 	border-radius: 10px;
 	width: 50rem;
 	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
-	border-radius: 5px;
 	background-color: rgba(255, 255, 255, 0.15);
 	display: inline-grid;
 	text-align: center;
@@ -29,7 +28,7 @@ form {
 .login-header {
 	font-family: 'Zen Loop', cursive;
 	font-weight: 700;
-	font-size: 4rem;
+	font-size: 5em;
 }
 
 .loginForm {
@@ -43,7 +42,7 @@ form {
 }
 
 .createRoom {
-	padding: 0 50px;
+	padding: 0 50px 50px 50px;
 }
 
 .btn-join {
@@ -53,4 +52,5 @@ form {
 .form-control,
 .form-select {
 	font-weight: 700;
+	font-size: 1.7em;
 }

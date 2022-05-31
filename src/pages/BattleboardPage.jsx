@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
+import Loser from "../components/Loser"
+import WaitingRoom from "./WaitingRoom";
+import Logo from "../assets/images/logo.png"
 import 'normalize.css';
 import "../assets/css/BattleboardPage.css"
 
+
 const BattleboardPage = () => {
-	// const [players, setPlayers] = useState([]);
+	const [players, setPlayers] = useState([]);
 	// const [connected, setConnected] = useState(false);
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
@@ -19,31 +23,22 @@ const BattleboardPage = () => {
 		console.log("Got new playerlist", playerlist);
 		// setPlayers(playerlist);
 		setTurn(Object.values(playerlist)[0]);
-		
+
 		if (Object.keys(playerlist).length === 2) {
-			if(Object.values(playerlist)[0] === gameUsername){
-				
-					setEnemy(Object.values(playerlist)[1])
-				
+			if (Object.values(playerlist)[0] === gameUsername) {
+				setEnemy(Object.values(playerlist)[1]);
+			} else {
+				setEnemy(Object.values(playerlist)[0]);
 			}
-			else {
-				
-					setEnemy(Object.values(playerlist)[0])
-			
-			}
-			
+
 			setWaiting(false);
-			
+
 			socket.emit("update-list");
-			
-			
-		
 		} else if (Object.keys(playerlist).length === 1) {
 			setWaiting(true);
 			socket.emit("update-list");
 		}
 	};
-	
 
 	// connect to room when component is mounted
 	useEffect(() => {
@@ -59,15 +54,13 @@ const BattleboardPage = () => {
 				`Successfully joined ${game_id} as ${gameUsername}`,
 				status
 			);
-		
+
 			// setConnected(true);
 		});
 
 		// listen for updated userlist
-		
+
 		socket.on("player:list", handleUpdatePlayers);
-		
-		
 
 		return () => {
 			console.log("Running cleanup");
@@ -82,11 +75,36 @@ const BattleboardPage = () => {
 
 	return (
 		<div className="gamewrapper">
-
 			<div className="game-header">
-				<h1 className="game-tagline">Let's Battleship</h1>
+
+				<div className="game-header-title">
+					 <div className="game-tagline"><img src={Logo} alt="" /></div>
+
+					<div className="room-name">
+						<p className="room-name-tagline">{game_id}</p>
+					</div>
+				</div>
+
+			</div>
+
+			{waiting && (
+					<div>
+						<WaitingRoom />
+						{/* <Loser /> */}
+					</div>
+			)}
+
+			{/* {countdown && (
+					<div className="countdown-timer">
+						<img src={Count} alt="" />
+					</div>
+			)} */}
+				{/* <h1 className="game-tagline">Let's Battleship</h1>
 				{waiting && 
 				<p>Waiting for player...</p>}
+				<div id="players">
+				<h1 className="game-tagline">Let's Battleship</h1>
+				{waiting && <p>Waiting for player...</p>}
 				{/* <div id="players">
 					<h2>Players</h2>
 					<ul className="online-players">
@@ -95,18 +113,19 @@ const BattleboardPage = () => {
 					<li>Enemy: {enemy}</li>
 					</ul>
 				</div> */}
-				
-				
-			</div>	
 
 			{!waiting && (
 				<>
 					{/* <p>Game is starting!</p> */}
-					<Battleboard yourName={gameUsername} enemy={enemy} WhoseTurn={turn}/>
-				
+					<Battleboard
+						yourName={gameUsername}
+						enemy={enemy}
+						WhoseTurn={turn}
+					/>
 				</>
 			)}
-		</div>
+		</div>	
+
 	);
 };
 
