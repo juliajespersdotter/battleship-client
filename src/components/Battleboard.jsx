@@ -379,14 +379,6 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
         setBoardReady(true);
     }
 
-    // useEffect(()=> {
-    // if(shipTwoEnemy.length !== 0 && shipTwoSecondEnemy.length !== 0 && shipThreeEnemy.length !== 0 && shipFourEnemy.length !== 0 && shipTwo.length !== 0 && shipTwoSecond.length !== 0 && shipThree.length !== 0 && shipFour.length !== 0 ) {
-    //     startGameFunction();
-    // }
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [boardEnemy])
-   
-
     useEffect(()=> {
     setPositions([positionUp, positionRight, positionDown, positionLeft]);
     }, [positionUp, positionRight, positionDown, positionLeft])
@@ -423,15 +415,6 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
             setStartGame(true);
         }
     })
-    
-    // useEffect(()=> {
-    //     if(startGame === false ) {
-    //         socket.emit('player-ready', game_id)
-    //         console.log('got enemy ship data and sending it to socket, players ready')
-    //     }
-    //       // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [boardEnemy])
-
 
     useEffect(() => {
     if(startGame === true){
@@ -447,176 +430,6 @@ const Battleboard = ({yourName, enemy, WhoseTurn}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startGame, sendShip])
     
-  
-
-    // const getRandomPosition = (array) => {
-
-    //     let random = Math.floor(Math.random() * 100);
-    //     if (array.length === 10) {
-    //         if (array.indexOf(random) !== -1) {
-    //             return ++random;
-    //         }
-    //         else {
-    //             return random;
-    //         }
-    //     }
-    //     if (array.length === 20) {
-    //         if (array.indexOf(random) !== -1) {
-    //             random++;
-    //             if (array.indexOf(random) !== -1) {
-    //                 return ++random;
-    //             }
-    //         }
-    //         else {
-    //             return random;
-    //         }
-    //     }
-    //     if (array.length === 30) {
-    //         if (array.indexOf(random) !== -1) {
-    //             random++;
-    //             if (array.indexOf(random) !== -1) {
-    //                 random++;
-    //             }
-    //             if (array.indexOf(random) !== -1) {
-    //                 return ++random;
-    //             }
-    //         }
-    //         else {
-    //             return random;
-    //         }
-    //     }
-    // }
-
-    // const ship2 = () => {
-    //     const startPos = getRandomPosition([9, 19, 29, 39, 49, 59, 69, 79, 89, 99]);
-    //     return [startPos, startPos + 1]
-    // }
-    // const ship3 = () => {
-    //     const startPos = getRandomPosition([8, 9, 18, 19, 28, 29, 38, 39, 48, 49, 58, 59, 68, 69, 78, 79, 88, 89, 98, 99]);
-    //     return [startPos, startPos + 1, startPos + 2];
-    // }
-    // const ship4 = () => {
-    //     const startPos = getRandomPosition([7, 8, 9, 17, 18, 19, 27, 28, 29, 37, 38, 39, 47, 48, 49, 57, 58, 59, 67, 68, 69, 77, 78, 79, 87, 88, 89, 97, 98, 99]);
-    //     return [startPos, startPos + 1, startPos + 2, startPos + 3];
-    // }
-
-    
-   
-    // const setShips = () => {
-    //     setShipRemain([1,2,3,4])
-    //     setShipRemainEnemy([1,2,3,4])
-    //     let isReady = true;
-    //     while (isReady) {
-    //         let boardCopy = [...board];
-    //         const skepp2 = ship2();
-    //         if (boardCopy[skepp2[0]] === null && boardCopy[skepp2[1]] === null) {
-    //             boardCopy[skepp2[0]] = 'ship2';
-    //             boardCopy[skepp2[1]] = 'ship2';
-    //         }
-
-    //         let skepp2Second = ship2();
-    //         if (boardCopy[skepp2Second[0]] === null && boardCopy[skepp2Second[1]] === null) {
-    //             boardCopy[skepp2Second[0]] = 'ship2Second';
-    //             boardCopy[skepp2Second[1]] = 'ship2Second';
-    //         }
-
-    //         let skepp3 = ship3();
-    //         if (boardCopy[skepp3[0]] === null && boardCopy[skepp3[1]] === null && boardCopy[skepp3[2]] === null) {
-    //             boardCopy[skepp3[0]] = 'ship3';
-    //             boardCopy[skepp3[1]] = 'ship3';
-    //             boardCopy[skepp3[2]] = 'ship3';
-    //         }
-
-    //         let skepp4 = ship4();
-    //         if (boardCopy[skepp4[0]] === null && boardCopy[skepp4[1]] === null && boardCopy[skepp4[2]] === null && boardCopy[skepp4[3]] === null) {
-    //             boardCopy[skepp4[0]] = 'ship4';
-    //             boardCopy[skepp4[1]] = 'ship4';
-    //             boardCopy[skepp4[2]] = 'ship4';
-    //             boardCopy[skepp4[3]] = 'ship4';
-    //         }
-
-    //         if (boardCopy[skepp3[0]] === 'ship3' && boardCopy[skepp2Second[0]] === 'ship2Second' && boardCopy[skepp4[0]] === 'ship4') {
-    //             setShipTwo([ skepp2[0], skepp2[1]]);
-    //             setShipTwoSecond([skepp2Second[0],skepp2Second[1]]);
-    //             setShipThree([skepp3[0],skepp3[1], skepp3[2]]);
-    //             setShipFour([skepp4[0],skepp4[1], skepp4[2], skepp4[3]]);
-    //             setBoard(boardCopy);
-    //             setStartGame(true);
-    //             isReady = false;
-    //         }
-    //     }
-       
-    // }
-
-const handleEnemyClick = (index) => {
-
-    let boardCopy = [...board];
-    const whichShip = boardCopy[index];
-    console.log('whichship', whichShip)
-    if(boardCopy[index] !== null){
-        boardCopy[index] = "hitShip";
-        // code only for ship 3
-        // if(whichShip === 'ship3'){
-        //     if(shipThree.indexOf(index) !== -1){
-    
-        //         const shipIndex = shipThree.indexOf(index);
-        //         shipThree.splice(shipIndex,1);
-        //         if(shipThree.length === 0){
-        //             shipRemain.pop();
-        //         }
-        //       }
-        //       console.log('shipThree', shipThree)
-        //       console.log('shipremain', shipRemain)
-        //     }
-    }
-    if(boardCopy[index] === null){
-        boardCopy[index] = "missShip";
-    }
-       setBoard(boardCopy);
-       setHitShip([]);
-}
-
-
-//    useEffect(() => {
-
-//     if(startGame === false) {
-//         setShips()
-//     }
-
-//    if(startGame === true) {
-//     socket.on('get-ship-data', (shipp1, shipp2, shipp3, shipp4) => {
-//         let boardCopyEnemy = [...boardEnemy];
-//         setShipTwoEnemy(shipp1);
-//         boardCopyEnemy[shipp1[0]] = 'ship2Enemy';
-//         boardCopyEnemy[shipp1[1]] = 'ship2Enemy';
-//         setShipTwoSecondEnemy(shipp2);
-//         boardCopyEnemy[shipp2[0]] = 'ship2SecondEnemy';
-//         boardCopyEnemy[shipp2[1]] = 'ship2SecondEnemy';
-//         setShipThreeEnemy(shipp3);
-//         boardCopyEnemy[shipp3[0]] = 'ship3Enemy';
-//         boardCopyEnemy[shipp3[1]] = 'ship3Enemy';
-//         boardCopyEnemy[shipp3[2]] = 'ship3Enemy';
-//         setShipFourEnemy(shipp4);
-//         boardCopyEnemy[shipp4[0]] = 'ship4Enemy';
-//         boardCopyEnemy[shipp4[1]] = 'ship4Enemy';
-//         boardCopyEnemy[shipp4[2]] = 'ship4Enemy';
-//         boardCopyEnemy[shipp4[3]] = 'ship4Enemy';
-//         setBoardEnemy(boardCopyEnemy);
-//     })
-
-//     setTurn(WhoseTurn);
-//     if(WhoseTurn === yourName) {
-//         setDisabled(false);
-//     }
-//     console.log('from useeffect')
-//     setStartGame(null);
-//    }
-
-
-//    socket.emit('ship-data', game_id, shipTwo, shipTwoSecond, shipThree, shipFour)
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//    }, [startGame])
-
 
    const handleWhoseTurn = (whoTurn) => {
     setTurn(whoTurn)
@@ -747,4 +560,3 @@ const handleEnemyClick = (index) => {
 
 export default Battleboard;
 
-//disabled={disabledRight} 
