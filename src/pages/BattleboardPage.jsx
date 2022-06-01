@@ -56,14 +56,20 @@ const BattleboardPage = () => {
 				status
 			);
 
+			setDisconnectedMsg(false);
+			setDisconnected("");
+
 			// setConnected(true);
 		});
 
 		// listen for updated userlist
 
 		socket.on("player:list", handleUpdatePlayers);
-		setDisconnectedMsg(false);
-		setDisconnected("");
+
+		socket.on("player:disconnect", (username) => {
+			setDisconnected(username);
+			setDisconnectedMsg(true);
+		});
 
 		return () => {
 			console.log("Running cleanup");
@@ -75,11 +81,6 @@ const BattleboardPage = () => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
-
-	socket.on("player:left", (username) => {
-		setDisconnected(username);
-		setDisconnectedMsg(true);
-	});
 
 	return (
 		<div className="gamewrapper">
