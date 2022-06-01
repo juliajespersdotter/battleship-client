@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
-import Loser from "../components/Loser"
+import Loser from "../components/Loser";
 import WaitingRoom from "./WaitingRoom";
-import Logo from "../assets/images/logo.png"
-import 'normalize.css';
-import "../assets/css/BattleboardPage.css"
-
+import Logo from "../assets/images/logo.png";
+import "normalize.css";
+import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
-	const [players, setPlayers] = useState([]);
+	// const [players, setPlayers] = useState([]);
 	// const [connected, setConnected] = useState(false);
+	const [disconnectedMsg, setDisconnectedMsg] = useState(false);
+	const [disconnected, setDisconnected] = useState("");
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const [enemy, setEnemy] = useState();
@@ -61,6 +62,8 @@ const BattleboardPage = () => {
 		// listen for updated userlist
 
 		socket.on("player:list", handleUpdatePlayers);
+		setDisconnectedMsg(false);
+		setDisconnected("");
 
 		return () => {
 			console.log("Running cleanup");
@@ -73,25 +76,31 @@ const BattleboardPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
 
+	socket.on("player:left", (username) => {
+		setDisconnected(username);
+		setDisconnectedMsg(true);
+	});
+
 	return (
 		<div className="gamewrapper">
 			<div className="game-header">
-
 				<div className="game-header-title">
-					 <div className="game-tagline"><img src={Logo} alt="" /></div>
+					<div className="game-tagline">
+						<img src={Logo} alt="" />
+					</div>
 
 					<div className="room-name">
 						<p className="room-name-tagline">{game_id}</p>
 					</div>
+					{disconnectedMsg && <p>{disconnected} disconnected</p>}
 				</div>
-
 			</div>
 
 			{waiting && (
-					<div>
-						<WaitingRoom />
-						{/* <Loser /> */}
-					</div>
+				<div>
+					<WaitingRoom />
+					{/* <Loser /> */}
+				</div>
 			)}
 
 			{/* {countdown && (
@@ -99,7 +108,7 @@ const BattleboardPage = () => {
 						<img src={Count} alt="" />
 					</div>
 			)} */}
-				{/* <h1 className="game-tagline">Let's Battleship</h1>
+			{/* <h1 className="game-tagline">Let's Battleship</h1>
 				{waiting && 
 				<p>Waiting for player...</p>}
 				<div id="players">
@@ -124,8 +133,7 @@ const BattleboardPage = () => {
 					/>
 				</>
 			)}
-		</div>	
-
+		</div>
 	);
 };
 
