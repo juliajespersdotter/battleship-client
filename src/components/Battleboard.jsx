@@ -131,6 +131,14 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				// startGameFunction();
 			}
 		});
+		socket.on("get-ships-remaining", (totalShips) => {
+			setShipRemain(totalShips);
+
+			// if (shipRemain.length === 0) {
+			// 	console.log("No ships remaining", shipRemain);
+			// 	setWinnerEnemy(true);
+			// }
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, shipTwo, shipTwoEnemy]);
 
@@ -672,6 +680,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			shipArray.splice(shipIndex, 1);
 			if (shipArray.length === 0) {
 				totalShips.pop();
+				console.log("total ships ", totalShips);
+				socket.emit("ships-remaining", game_id, totalShips);
 			}
 		}
 	};
@@ -780,6 +790,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			boardCopy[attackClick] = "hitShip";
 			console.log("shipRemain1", shipRemain);
 			console.log("hit ship", clickedShip);
+			/*
 			if (clickedShip === "ship3") {
 				console.log("ship 3 remaining", shipThree);
 				shipsRemaining(shipThree, attackClick, shipRemain);
@@ -795,7 +806,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			if (clickedShip === "ship2Second") {
 				console.log("ship 2 2 remaining", shipTwoSecond);
 				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
-			}
+			}*/
 			if (shipRemain.length === 0) {
 				console.log("No ships remaining", shipRemain);
 				setWinnerEnemy(true);
