@@ -712,18 +712,18 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 	};
 
-	socket.on("start-game", () => {
+    const handleStartGame = () => {
 		console.log("starting game , start-game");
 		if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
 			setStartGame(true);
 			// startGameFunction();
 		}
-	});
+	};
 
-	socket.on("get-whose-turn", handleWhoseTurn);
+	
 
-	socket.on("get-enemy-click", (attackClick) => {
-		if (disabled === false) {
+	const handleGetEnemyClick = (attackClick) => {
+		
 			const boardCopy = [...board];
 			const clickedShip = boardCopy[attackClick];
 
@@ -763,10 +763,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			setTurn(youName);
 			setDisabled(true);
 			socket.emit("whose-turn", youName, game_id);
-		}
-	});
+		
+	};
 
-	socket.on("get-ship-data", (shipData) => {
+	const handleGetShipData = (shipData) => {
 		console.log("shipData.shipTwo.length", shipData.shipTwo.length);
 		if (
 			shipData.shipTwo.length !== 0 &&
@@ -793,15 +793,23 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			setBoardEnemy(boardCopyEnemy);
 			socket.emit("player-ready", game_id);
 		}
-	});
+	};
 
-	socket.on("winner", (username) => {
+	const handleWinner = (username) => {
 		if (username === gameUsername) {
 			setWinner(true);
 		} else if (username !== gameUsername) {
 			setWinnerEnemy(true);
 		}
-	});
+	};
+
+    useEffect(()=> {
+        socket.on("winner", handleWinner);
+        socket.on("get-ship-data", handleGetShipData);
+        socket.on("get-enemy-click", handleGetEnemyClick);
+        socket.on("get-whose-turn", handleWhoseTurn);
+        socket.on("start-game", handleStartGame);
+    }, [socket])
 
 	return (
 		<>

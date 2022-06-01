@@ -39,6 +39,7 @@ const Login = () => {
 
 	// change this???
 	socket.on("new-game-list", () => {
+		console.log('new game list')
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
 			setGamelist(list);
