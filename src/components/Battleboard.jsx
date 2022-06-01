@@ -1,6 +1,6 @@
 import Gameboard from "./Gameboard";
-import Loser from "../components/Loser"
-import Victory from "../components/Victory"
+import Loser from "../components/Loser";
+import Victory from "../components/Victory";
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
@@ -204,7 +204,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	};
 
 	const handleClick = (clickedSquare) => {
-		socket.emit("click-data-hit", game_id, clickedSquare);
+		socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
 		const boardCopy = [...boardEnemy];
 		const clickedShip = boardCopy[clickedSquare];
 
@@ -242,9 +242,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 
 		setBoardEnemy(boardCopy);
-		setTurn(whoEnemy);
-		setDisabled(true);
-		socket.emit("whose-turn", whoEnemy, game_id);
+		// setTurn(whoEnemy);
+		// setDisabled(true);
+		// socket.emit("whose-turn", whoEnemy, game_id);
 	};
 
 	socket.on("get-whose-turn", handleWhoseTurn);
@@ -280,9 +280,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 
 		setBoard(boardCopy);
-		setTurn(youName);
-		setDisabled(true);
-		socket.emit("whose-turn", youName, game_id);
+		// setTurn(youName);
+		// setDisabled(true);
+		// socket.emit("whose-turn", youName, game_id);
 	});
 
 	socket.on("get-ship-data", (shipData) => {
@@ -318,16 +318,19 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			{renderBoards && (
 				<>
 					<div className="turn-tag">
-						<h2 className="whose-turn">Whose turn?</h2> <span className="whose-turn-name">{turn}</span>
+						<h2 className="whose-turn">Whose turn?</h2>{" "}
+						<span className="whose-turn-name">{turn}</span>
 					</div>
 
 					<div className="game-container">
 						<div className="game-board game-board-you">
 							<div className="username">
 								<span className="game-title">You: </span>
-								<span className="game-title-you">{gameUsername}</span>
+								<span className="game-title-you">
+									{gameUsername}
+								</span>
 							</div>
-							
+
 							<p className="ships-remain-text">
 								Ships remaining:{" "}
 								<span className="ships-remain-text-bold">
@@ -344,9 +347,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						<div className="game-board game-board-enemy">
 							<div className="username">
 								<span className="game-title">Enemy: </span>
-								<span className="game-title-you">{whoEnemy}</span>
+								<span className="game-title-you">
+									{whoEnemy}
+								</span>
 							</div>
-							
+
 							<p className="ships-remain-text">
 								Ships remaining:{" "}
 								<span className="ships-remain-text-bold">
