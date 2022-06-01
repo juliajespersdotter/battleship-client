@@ -125,7 +125,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		socket.on("get-ship-data", handleGetShipData);
 		socket.on("get-whose-turn", handleWhoseTurn);
 		socket.on("start-game", () => {
-			console.log("starting game , start-game");
+			// console.log("starting game , start-game");
 			if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
 				setStartGame(true);
 				// startGameFunction();
@@ -153,15 +153,15 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		setShipRemainEnemy([1, 2, 3, 4]);
 
 		if (startGame === true) {
-			console.log("call startgame function");
+			//  console.log("call startgame function");
 			startGameFunction();
 			// setStartGame(false);
 		}
 		if (sendShip === true) {
-			console.log("shipTwo", shipTwo);
-			console.log("shipTwoSecond", shipTwoSecond);
-			console.log("shipThree", shipThree);
-			console.log("shipFour", shipFour);
+			// console.log("shipTwo", shipTwo);
+			// console.log("shipTwoSecond", shipTwoSecond);
+			// console.log("shipThree", shipThree);
+			// console.log("shipFour", shipFour);
 			socket.emit("ship-data", {
 				id: game_id,
 				shipTwo: shipTwo,
@@ -663,7 +663,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		// console.log("yourship inside startgame", objectShipData);
 		// console.log("enemy ship inside start game", shipFourEnemy);
 		// if (shipFour.length !== 0 && shipFourEnemy.length !== 0) {
-		console.log("startGame");
+		// console.log("startGame");
 		if (turn === null) {
 			setTurn(WhoseTurn);
 			if (WhoseTurn === yourName) {
@@ -680,7 +680,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			shipArray.splice(shipIndex, 1);
 			if (shipArray.length === 0) {
 				totalShips.pop();
-				console.log("total ships ", totalShips);
+				// console.log("total ships ", totalShips);
 				socket.emit("ships-remaining", game_id, totalShips);
 			}
 		}
@@ -688,7 +688,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 
 	const handleWhoseTurn = (whoTurn) => {
 		setTurn(whoTurn);
-		console.log("whose turn from emit", whoTurn);
+		// console.log("whose turn from emit", whoTurn);
 		if (whoTurn === youName) {
 			setDisabled(false);
 		} else {
@@ -711,15 +711,15 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				clickedShip !== "hitShip"
 			) {
 				boardCopy[clickedSquare] = "hitShip";
-				console.log("shipRemainEnemy1", shipRemainEnemy);
+				// console.log("shipRemainEnemy1", shipRemainEnemy);
 				if (clickedShip === "ship3Enemy") {
 					shipsRemaining(
 						shipThreeEnemy,
 						clickedSquare,
 						shipRemainEnemy
 					);
-					console.log("ship 3 enemy:", shipThreeEnemy);
-					console.log("ship remain enemy:", shipRemainEnemy);
+					// console.log("ship 3 enemy:", shipThreeEnemy);
+					// console.log("ship remain enemy:", shipRemainEnemy);
 				}
 				if (clickedShip === "ship4Enemy") {
 					shipsRemaining(
@@ -743,7 +743,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					);
 				}
 				if (shipRemainEnemy.length === 0) {
-					console.log("shipRemainEnemy2", shipRemainEnemy);
+					//  console.log("shipRemainEnemy2", shipRemainEnemy);
 					// emit the winner to server
 					socket.emit("game-over", gameUsername, game_id);
 				}
@@ -773,10 +773,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			clickedShip !== "hitShip"
 		) {
 			boardCopy[attackClick] = "hitShip";
-			console.log("shipRemain1", shipRemain);
-			console.log("hit ship", clickedShip);
+			// console.log("shipRemain1", shipRemain);
+			// console.log("hit ship", clickedShip);
 			if (shipRemain.length === 0) {
-				console.log("No ships remaining", shipRemain);
+				// console.log("No ships remaining", shipRemain);
 				setWinnerEnemy(true);
 			}
 		} else if (clickedShip === null) {
@@ -791,15 +791,15 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	};
 
 	const handleGetShipData = async (shipData) => {
-		console.log("shipData.shipTwo.length", shipData.shipTwo.length);
-		console.log("shipData.shipfour.length", shipData.shipFour.length);
+		// console.log("shipData.shipTwo.length", shipData.shipTwo.length);
+		// console.log("shipData.shipfour.length", shipData.shipFour.length);
 		if (
 			shipData.shipTwo.length !== 0 &&
 			shipData.shipTwoSecond.length !== 0 &&
 			shipData.shipThree.length !== 0 &&
 			shipData.shipFour.length !== 0
 		) {
-			console.log("inside handleship data");
+			// console.log("inside handleship data");
 			let boardCopyEnemy = [...boardEnemy];
 			setShipTwoEnemy(shipData.shipTwo);
 			boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";

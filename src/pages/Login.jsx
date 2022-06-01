@@ -81,7 +81,10 @@ const Login = () => {
 							onChange={(e) => setGame(e.target.value)}
 							value={game}
 						>
-							{!gamelist && <option disabled>Loading...</option>}
+							{!gamelist.length && (
+								// <option disabled>No games currently</option>
+								<option value="">No games currently</option>
+							)}
 
 							{gamelist.length && (
 								<>
