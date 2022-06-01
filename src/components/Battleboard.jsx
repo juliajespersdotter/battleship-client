@@ -32,14 +32,13 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const [shipFourEnemy, setShipFourEnemy] = useState([]);
 	const [shipRemainEnemy, setShipRemainEnemy] = useState([]);
 	const [winnerEnemy, setWinnerEnemy] = useState(false);
-	// const [renderBoards, setRenderBoards] = useState(false);
 
-	// const [startGame, setStartGame] = useState(false);
-	// const [sendShip, setSendShip] = useState(false);
+	const [startGame, setStartGame] = useState(false);
+	const [sendShip, setSendShip] = useState(false);
 
-    const [objectShipData, setObjectShipData] = useState({});
+	// const [objectShipData, setObjectShipData] = useState({});
 
-    const [enemyShipReady, setEnemyShipReady] = useState({});
+	const [enemyShipsReady, setEnemyShipsReady] = useState(false);
 
 	const [boardReady, setBoardReady] = useState(false);
 
@@ -119,6 +118,70 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		setPositionRight("no");
 		setPositionDown("no");
 	};
+
+	useEffect(() => {
+		// socket listeners
+		socket.on("winner", handleWinner);
+		socket.on("get-ship-data", handleGetShipData);
+		socket.on("get-whose-turn", handleWhoseTurn);
+		socket.on("start-game", () => {
+			console.log("starting game , start-game");
+			if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
+				setStartGame(true);
+				// startGameFunction();
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket, shipTwo, shipTwoEnemy]);
+
+	useEffect(() => {
+		if (enemyShipsReady === true) {
+			socket.emit("player-ready", game_id);
+		}
+	}, [socket, game_id, enemyShipsReady]);
+
+	useEffect(() => {
+		setShipRemain([1, 2, 3, 4]);
+		setShipRemainEnemy([1, 2, 3, 4]);
+
+		if (startGame === true) {
+			console.log("call startgame function");
+			startGameFunction();
+			// setStartGame(false);
+		}
+		if (sendShip === true) {
+			console.log("shipTwo", shipTwo);
+			console.log("shipTwoSecond", shipTwoSecond);
+			console.log("shipThree", shipThree);
+			console.log("shipFour", shipFour);
+			socket.emit("ship-data", {
+				id: game_id,
+				shipTwo: shipTwo,
+				shipTwoSecond: shipTwoSecond,
+				shipThree: shipThree,
+				shipFour: shipFour,
+			});
+		} else {
+			return;
+		}
+		setSendShip(false);
+		setStartGame(null);
+
+		return () => {
+			// socket.off("winner", handleWinner);
+			// socket.off("get-ship-data", handleGetShipData);
+			// socket.off("get-enemy-click", handleGetEnemyClick);
+			// socket.off("get-whose-turn", handleWhoseTurn);
+			// socket.off("start-game", handleStartGame);
+			setSendShip(false);
+		};
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [startGame, sendShip]);
+
+	useEffect(() => {
+		setPositions([positionUp, positionRight, positionDown, positionLeft]);
+	}, [positionUp, positionRight, positionDown, positionLeft]);
 
 	const setUpYourShips = (index) => {
 		if (positions.indexOf("yes") !== -1) {
@@ -475,15 +538,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
-					// setSendShip(true);
-                    // setObjectShipData({
-                    //     id: game_id,
-                    //     shipTwo: shipTwo,
-                    //     shipTwoSecond: shipTwoSecond,
-                    //     shipThree: shipThree,
-                    //     shipFour: shipFour,
-                    // })
-                    // socket.emit("ship-data", objectShipData);
+					setSendShip(true);
 				}
 			}
 			//direction RIGHT
@@ -518,15 +573,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
-					// setSendShip(true);
-                    // setObjectShipData({
-                    //     id: game_id,
-                    //     shipTwo: shipTwo,
-                    //     shipTwoSecond: shipTwoSecond,
-                    //     shipThree: shipThree,
-                    //     shipFour: shipFour,
-                    // })
-                    // socket.emit("ship-data", objectShipData);
+					setSendShip(true);
 				}
 			}
 			//direction DOWN
@@ -561,15 +608,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
-					// setSendShip(true);
-                    // setObjectShipData({
-                    //     id: game_id,
-                    //     shipTwo: shipTwo,
-                    //     shipTwoSecond: shipTwoSecond,
-                    //     shipThree: shipThree,
-                    //     shipFour: shipFour,
-                    // })
-                    // socket.emit("ship-data", objectShipData);
+					setSendShip(true);
 				}
 			}
 			//direction LEFT
@@ -604,98 +643,28 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
-                    // setSendShip(true);
-                    // setObjectShipData({
-                    //     id: game_id,
-                    //     shipTwo: shipTwo,
-                    //     shipTwoSecond: shipTwoSecond,
-                    //     shipThree: shipThree,
-                    //     shipFour: shipFour,
-                    // })
-                    // socket.emit("ship-data", objectShipData);
+					setSendShip(true);
 				}
 			}
-			;
 		} else {
 			setMessage("First, you must select direction of your ship");
 		}
 	};
 
 	const startGameFunction = () => {
-        console.log('yourship inside startgame', objectShipData);
-        console.log('enemy ship inside start game', shipFourEnemy)
-        if(shipFour.length !== 0 && shipFourEnemy.length !== 0){
-            console.log('startGame')
-            setShipRemain([1, 2, 3, 4]);
-            setShipRemainEnemy([1, 2, 3, 4]);
-                if (turn === null) {
-                    setTurn(WhoseTurn);
-                    if (WhoseTurn === yourName) {
-                        setDisabled(false);
-                    }
-                }
-                // setRenderBoards(true);
-                setBoardReady(true);
-        }
+		// console.log("yourship inside startgame", objectShipData);
+		// console.log("enemy ship inside start game", shipFourEnemy);
+		// if (shipFour.length !== 0 && shipFourEnemy.length !== 0) {
+		console.log("startGame");
+		if (turn === null) {
+			setTurn(WhoseTurn);
+			if (WhoseTurn === yourName) {
+				setDisabled(false);
+			}
+		}
+		// setRenderBoards(true);
+		setBoardReady(true);
 	};
-
-
-// useEffect(()=> {
-//     if(startGame === true){
-//         if (turn === null) {
-//             setTurn(WhoseTurn);
-//             if (WhoseTurn === yourName) {
-//                 setDisabled(false);
-//             }
-//         }
-//         // setRenderBoards(true);
-//         setBoardReady(true);
-//     }
-   
-
-// }, [startGame, turn, boardReady, yourName])
-    // useEffect(()=> {
-    //     if(sendShip === true) {
-    //         console.log('ship data from useeffect', objectShipData)
-    //         socket.emit("ship-data", objectShipData);
-    //     }
-    // }, [sendShip, objectShipData, socket])
-
-    // useEffect(()=> {
-    //     if(objectShipData.shipFour.length !== 0){
-    //         setSendShip(true);
-    //     }
-    // },[sendShip, objectShipData])
-
-    useEffect(()=> {
-        console.log('ship data', objectShipData)
-        if(shipFour.length !== 0){
-            socket.emit("ship-data", objectShipData);
-        }
-       
-
-    }, [socket, objectShipData, shipFour])
-
-	useEffect(() => {
-        
-		setPositions([positionUp, positionRight, positionDown, positionLeft]);
-	}, [positionUp, positionRight, positionDown, positionLeft]);
-
-
-   useEffect(() => {
-    console.log('halllooo from setObjectship data')
-    setObjectShipData({
-        id: game_id,
-        shipTwo: shipTwo,
-        shipTwoSecond: shipTwoSecond,
-        shipThree: shipThree,
-        shipFour: shipFour,
-    })
-
-   }, [game_id, shipTwo, shipTwoSecond, shipThree, shipFour])
-
-
-
 
 	const shipsRemaining = (shipArray, square, totalShips) => {
 		if (shipArray.indexOf(square) !== -1) {
@@ -719,7 +688,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 
 	const handleClick = (clickedSquare) => {
 		if (disabled === false) {
-			socket.emit("click-data-hit", game_id, clickedSquare);
+			socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
 			const boardCopy = [...boardEnemy];
 			const clickedShip = boardCopy[clickedSquare];
 
@@ -772,75 +741,86 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			setBoardEnemy(boardCopy);
 			setTurn(whoEnemy);
 			setDisabled(true);
-			socket.emit("whose-turn", whoEnemy, game_id);
+			// socket.emit("whose-turn", whoEnemy, game_id);
 		}
 	};
 
-    const handleStartGame = () => {
+	/*
+	const handleStartGame = () => {
 		console.log("starting game , start-game");
-       
-        
-		// setStartGame(true);
-            startGameFunction();
-		
-	};
+		setShipRemain([1, 2, 3, 4]);
+		setShipRemainEnemy([1, 2, 3, 4]);
 
-	
+		// setStartGame(true);
+		console.log("ship two", shipTwo);
+		console.log("ship two enemy", shipTwoEnemy);
+		if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
+			if (turn === null) {
+				setTurn(WhoseTurn);
+				if (WhoseTurn === yourName) {
+					setDisabled(false);
+				}
+			}
+			// setRenderBoards(true);
+			setBoardReady(true);
+		}
+	};*/
 
 	const handleGetEnemyClick = (attackClick) => {
-		
-			const boardCopy = [...board];
-			const clickedShip = boardCopy[attackClick];
+		// if (disabled === true) {
+		const boardCopy = [...board];
+		const clickedShip = boardCopy[attackClick];
+		// console.log()
 
-			if (
-				clickedShip !== null &&
-				clickedShip !== "missShip" &&
-				clickedShip !== "hitShip"
-			) {
-				boardCopy[attackClick] = "hitShip";
-				console.log("shipRemain1", shipRemain);
-				console.log("hit ship", clickedShip);
-				if (clickedShip === "ship3") {
-					console.log("ship 3 remaining", shipRemain);
-					shipsRemaining(shipThree, attackClick, shipRemain);
-				}
-				if (clickedShip === "ship4") {
-					console.log("ship4 remaining", shipRemain);
-					shipsRemaining(shipFour, attackClick, shipRemain);
-				}
-				if (clickedShip === "ship2") {
-					console.log("ship 2 remaining", shipRemain);
-					shipsRemaining(shipTwo, attackClick, shipRemain);
-				}
-				if (clickedShip === "ship2Second") {
-					console.log("ship 2 2 remaining", shipRemain);
-					shipsRemaining(shipTwoSecond, attackClick, shipRemain);
-				}
-				if (shipRemain.length === 0) {
-					console.log("No ships remaining", shipRemain);
-					setWinnerEnemy(true);
-				}
-			} else if (clickedShip === null) {
-				boardCopy[attackClick] = "missShip";
+		if (
+			clickedShip !== null &&
+			clickedShip !== "missShip" &&
+			clickedShip !== "hitShip"
+		) {
+			boardCopy[attackClick] = "hitShip";
+			console.log("shipRemain1", shipRemain);
+			console.log("hit ship", clickedShip);
+			if (clickedShip === "ship3") {
+				console.log("ship 3 remaining", shipThree);
+				shipsRemaining(shipThree, attackClick, shipRemain);
 			}
+			if (clickedShip === "ship4") {
+				console.log("ship4 remaining", shipFour);
+				shipsRemaining(shipFour, attackClick, shipRemain);
+			}
+			if (clickedShip === "ship2") {
+				console.log("ship 2 remaining", shipTwo);
+				shipsRemaining(shipTwo, attackClick, shipRemain);
+			}
+			if (clickedShip === "ship2Second") {
+				console.log("ship 2 2 remaining", shipTwoSecond);
+				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
+			}
+			if (shipRemain.length === 0) {
+				console.log("No ships remaining", shipRemain);
+				setWinnerEnemy(true);
+			}
+		} else if (clickedShip === null) {
+			boardCopy[attackClick] = "missShip";
+		}
 
-			setBoard(boardCopy);
-			// setTurn(youName);
-			// setDisabled(true);
-			// socket.emit("whose-turn", youName, game_id);
-		
+		setBoard(boardCopy);
+		// }
+		// setTurn(youName);
+		// setDisabled(true);
+		// socket.emit("whose-turn", youName, game_id);
 	};
 
-	const handleGetShipData = (shipData) => {
+	const handleGetShipData = async (shipData) => {
 		console.log("shipData.shipTwo.length", shipData.shipTwo.length);
-        console.log("shipData.shipfour.length", shipData.shipFour.length);
+		console.log("shipData.shipfour.length", shipData.shipFour.length);
 		if (
 			shipData.shipTwo.length !== 0 &&
 			shipData.shipTwoSecond.length !== 0 &&
 			shipData.shipThree.length !== 0 &&
 			shipData.shipFour.length !== 0
 		) {
-            console.log('inside handleship data')
+			console.log("inside handleship data");
 			let boardCopyEnemy = [...boardEnemy];
 			setShipTwoEnemy(shipData.shipTwo);
 			boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
@@ -858,15 +838,12 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			boardCopyEnemy[shipData.shipFour[2]] = "ship4Enemy";
 			boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
 			setBoardEnemy(boardCopyEnemy);
-            setEnemyShipReady(true);
+			setEnemyShipsReady(true);
+			// socket.emit("player-ready", game_id);
 		}
 	};
 
-    useEffect(()=> {
-        if(enemyShipReady === true) {
-	     socket.emit("player-ready", game_id);
-        }
-    }, [socket, game_id, enemyShipReady])
+	socket.on("get-enemy-click", handleGetEnemyClick);
 
 	const handleWinner = (username) => {
 		if (username === gameUsername) {
@@ -875,15 +852,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			setWinnerEnemy(true);
 		}
 	};
-
-    useEffect(()=> {
-        socket.on("winner", handleWinner);
-        socket.on("get-ship-data", handleGetShipData);
-        socket.on("get-enemy-click", handleGetEnemyClick);
-        socket.on("get-whose-turn", handleWhoseTurn);
-        socket.on("start-game", handleStartGame);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket])
 
 	return (
 		<>
@@ -933,7 +901,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
-										onClick={handleClick}
+										onClick={disabled ? true : handleClick}
 									/>
 								</div>
 							)}
