@@ -37,17 +37,18 @@ const Login = () => {
 		socket.emit("update-list");
 	};
 
-	// change this???
-	socket.on("new-game-list", () => {
-		socket.emit("get-game-list", (games) => {
-			const list = games.filter((game) => game.id);
-			setGamelist(list);
-		});
-	});
-
 	// as soon as the component is mounted, request room list
 	useEffect(() => {
 		// console.log("Requesting game list from server...");
+
+		// change this???
+		socket.on("new-game-list", () => {
+			console.log("new game list");
+			socket.emit("get-game-list", (games) => {
+				const list = games.filter((game) => game.id);
+				setGamelist(list);
+			});
+		});
 
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);

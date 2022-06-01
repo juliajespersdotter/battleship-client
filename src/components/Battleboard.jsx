@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const { socket, gameUsername } = useGameContext();
 	const { game_id } = useParams();
-	const [turn, setTurn] = useState();
+	const [turn, setTurn] = useState(null);
 	const [disabled, setDisabled] = useState(true);
 
 	const whoEnemy = enemy;
@@ -32,16 +32,136 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const [shipFourEnemy, setShipFourEnemy] = useState([]);
 	const [shipRemainEnemy, setShipRemainEnemy] = useState([]);
 	const [winnerEnemy, setWinnerEnemy] = useState(false);
-	const [renderBoards, setRenderBoards] = useState(false);
 
 	const [startGame, setStartGame] = useState(false);
+	const [sendShip, setSendShip] = useState(false);
+
+	// const [objectShipData, setObjectShipData] = useState({});
+
+	const [enemyShipsReady, setEnemyShipsReady] = useState(false);
+
+	const [boardReady, setBoardReady] = useState(false);
+
+	const [positionUp, setPositionUp] = useState("no");
+	const [positionRight, setPositionRight] = useState("no");
+	const [positionDown, setPositionDown] = useState("no");
+	const [positionLeft, setPositionLeft] = useState("no");
+	const [message, setMessage] = useState("");
+	const [whichShipToMake, setWhichShipToMake] = useState(
+		"Select direction and then the position of your FIRST ship (2 squares)"
+	);
+
+	const [positions, setPositions] = useState([]);
+
+	const forbiddenPositionShip2Right = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
+	const forbiddenPositionShip3Right = [
+		8, 9, 18, 19, 28, 29, 38, 39, 48, 49, 58, 59, 68, 69, 78, 79, 88, 89,
+		98, 99,
+	];
+	const forbiddenPositionShip4Right = [
+		7, 8, 9, 17, 18, 19, 27, 28, 29, 37, 38, 39, 47, 48, 49, 57, 58, 59, 67,
+		68, 69, 77, 78, 79, 87, 88, 89, 97, 98, 99,
+	];
+
+	const forbiddenPositionShip2Left = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+	const forbiddenPositionShip3Left = [
+		0, 1, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71, 80, 81,
+		90, 91,
+	];
+	const forbiddenPositionShip4Left = [
+		0, 1, 2, 10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42, 50, 51, 52, 60,
+		61, 62, 70, 71, 72, 80, 81, 82, 90, 91, 92,
+	];
+
+	const [clickedButtonUp, setClickedButtonUp] = useState("null");
+	const [clickedButtonRight, setClickedButtonRight] = useState("null");
+	const [clickedButtonDown, setClickedButtonDown] = useState("null");
+	const [clickedButtonLeft, setClickedButtonLeft] = useState("null");
+
+	const handlePositionUp = () => {
+		setClickedButtonUp("clickedButton");
+		setClickedButtonRight("null");
+		setClickedButtonDown("null");
+		setClickedButtonLeft("null");
+		setPositionUp("yes");
+		setPositionLeft("no");
+		setPositionRight("no");
+		setPositionDown("no");
+	};
+	const handlePositionRight = () => {
+		setClickedButtonRight("clickedButton");
+		setClickedButtonUp("null");
+		setClickedButtonDown("null");
+		setClickedButtonLeft("null");
+		setPositionRight("yes");
+		setPositionLeft("no");
+		setPositionUp("no");
+		setPositionDown("no");
+	};
+	const handlePositionDown = () => {
+		setClickedButtonDown("clickedButton");
+		setClickedButtonRight("null");
+		setClickedButtonUp("null");
+		setClickedButtonLeft("null");
+		setPositionDown("yes");
+		setPositionLeft("no");
+		setPositionRight("no");
+		setPositionUp("no");
+	};
+	const handlePositionLeft = () => {
+		setClickedButtonLeft("clickedButton");
+		setClickedButtonRight("null");
+		setClickedButtonDown("null");
+		setClickedButtonUp("null");
+		setPositionLeft("yes");
+		setPositionUp("no");
+		setPositionRight("no");
+		setPositionDown("no");
+	};
 
 	useEffect(() => {
-		if (startGame === false) {
-			setShips();
+		// socket listeners
+		socket.on("winner", handleWinner);
+		socket.on("get-ship-data", handleGetShipData);
+		socket.on("get-whose-turn", handleWhoseTurn);
+		socket.on("start-game", () => {
+			console.log("starting game , start-game");
+			if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
+				setStartGame(true);
+				// startGameFunction();
+			}
+		});
+		socket.on("get-ships-remaining", (totalShips) => {
+			setShipRemain(totalShips);
+
+			// if (shipRemain.length === 0) {
+			// 	console.log("No ships remaining", shipRemain);
+			// 	setWinnerEnemy(true);
+			// }
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket, shipTwo, shipTwoEnemy]);
+
+	useEffect(() => {
+		if (enemyShipsReady === true) {
+			socket.emit("player-ready", game_id);
 		}
+	}, [socket, game_id, enemyShipsReady]);
+
+	useEffect(() => {
+		setShipRemain([1, 2, 3, 4]);
+		setShipRemainEnemy([1, 2, 3, 4]);
 
 		if (startGame === true) {
+			console.log("call startgame function");
+			startGameFunction();
+			// setStartGame(false);
+		}
+		if (sendShip === true) {
+			console.log("shipTwo", shipTwo);
+			console.log("shipTwoSecond", shipTwoSecond);
+			console.log("shipThree", shipThree);
+			console.log("shipFour", shipFour);
 			socket.emit("ship-data", {
 				id: game_id,
 				shipTwo: shipTwo,
@@ -49,138 +169,509 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				shipThree: shipThree,
 				shipFour: shipFour,
 			});
+		} else {
+			return;
+		}
+		setSendShip(false);
+		setStartGame(null);
+
+		return () => {
+			// socket.off("winner", handleWinner);
+			// socket.off("get-ship-data", handleGetShipData);
+			// socket.off("get-enemy-click", handleGetEnemyClick);
+			// socket.off("get-whose-turn", handleWhoseTurn);
+			// socket.off("start-game", handleStartGame);
+			setSendShip(false);
+		};
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [startGame, sendShip]);
+
+	useEffect(() => {
+		setPositions([positionUp, positionRight, positionDown, positionLeft]);
+	}, [positionUp, positionRight, positionDown, positionLeft]);
+
+	const setUpYourShips = (index) => {
+		if (positions.indexOf("yes") !== -1) {
+			let whichDirection = positions.indexOf("yes");
+			let boardCopy = [...board];
+			// console.log(shipTwo.length)
+
+			//ship2
+			//direction UP
+			if (whichDirection === 0 && shipTwo.length === 0) {
+				if (index - 10 < 0) {
+					setMessage("Wrong position, try again");
+				}
+				if (index - 10 >= 0 && boardCopy[index] === null) {
+					boardCopy[index] = "ship2";
+					boardCopy[index - 10] = "ship2";
+					setShipTwo([index, index - 10]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your SECOND ship (2 squares)"
+					);
+				}
+			}
+			//direction RIGHT
+			if (whichDirection === 1 && shipTwo.length === 0) {
+				if (forbiddenPositionShip2Right.indexOf(index) !== -1) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip2Right.indexOf(index) === -1 &&
+					boardCopy[index] === null
+				) {
+					boardCopy[index] = "ship2";
+					boardCopy[index + 1] = "ship2";
+					setShipTwo([index, index + 1]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your SECOND ship (2 squares)"
+					);
+				}
+			}
+			//direction DOWN
+			if (whichDirection === 2 && shipTwo.length === 0) {
+				if (index + 10 > 99) {
+					setMessage("Wrong position, try again");
+				}
+				if (index + 10 <= 99 && boardCopy[index] === null) {
+					boardCopy[index] = "ship2";
+					boardCopy[index + 10] = "ship2";
+					setShipTwo([index, index + 10]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your SECOND ship (2 squares)"
+					);
+				}
+			}
+			//direction LEFT
+			if (whichDirection === 3 && shipTwo.length === 0) {
+				if (forbiddenPositionShip2Left.indexOf(index) !== -1) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip2Left.indexOf(index) === -1 &&
+					boardCopy[index] === null
+				) {
+					boardCopy[index] = "ship2";
+					boardCopy[index - 1] = "ship2";
+					setShipTwo([index, index - 1]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your SECOND ship (2 squares)"
+					);
+				}
+			}
+
+			// ship2Second
+			//direction UP
+			if (
+				whichDirection === 0 &&
+				shipTwoSecond.length === 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index - 10 < 0 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 10] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index - 10 >= 0 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 10] === null
+				) {
+					boardCopy[index] = "ship2Second";
+					boardCopy[index - 10] = "ship2Second";
+					setShipTwoSecond([index, index - 10]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your THIRD ship (3 squares)"
+					);
+				}
+			}
+			//direction RIGHT
+			if (
+				whichDirection === 1 &&
+				shipTwoSecond.length === 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip2Right.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 1] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip2Right.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 1] === null
+				) {
+					boardCopy[index] = "ship2Second";
+					boardCopy[index + 1] = "ship2Second";
+					setShipTwoSecond([index, index + 1]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your THIRD ship (3 squares)"
+					);
+				}
+			}
+			//direction DOWN
+			if (
+				whichDirection === 2 &&
+				shipTwoSecond.length === 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index + 10 > 99 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 10] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index + 10 <= 99 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 10] === null
+				) {
+					boardCopy[index] = "ship2Second";
+					boardCopy[index + 10] = "ship2Second";
+					setShipTwoSecond([index, index + 10]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your THIRD ship (3 squares)"
+					);
+				}
+			}
+			//direction LEFT
+			if (
+				whichDirection === 3 &&
+				shipTwoSecond.length === 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip2Left.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 1] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip2Left.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 1] === null
+				) {
+					boardCopy[index] = "ship2Second";
+					boardCopy[index - 1] = "ship2Second";
+					setShipTwoSecond([index, index - 1]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your THIRD ship (3 squares)"
+					);
+				}
+			}
+
+			// ship3
+			//direction UP
+			if (
+				whichDirection === 0 &&
+				shipThree.length === 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index - 20 < 0 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 10] !== null ||
+					boardCopy[index - 20] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index - 20 >= 0 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 10] === null &&
+					boardCopy[index - 20] === null
+				) {
+					boardCopy[index] = "ship3";
+					boardCopy[index - 10] = "ship3";
+					boardCopy[index - 20] = "ship3";
+					setShipThree([index, index - 10, index - 20]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your FOURTH ship (4 squares)"
+					);
+				}
+			}
+			//direction RIGHT
+			if (
+				whichDirection === 1 &&
+				shipThree.length === 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip3Right.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 1] !== null ||
+					boardCopy[index + 2] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip3Right.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 1] === null &&
+					boardCopy[index + 2] === null
+				) {
+					boardCopy[index] = "ship3";
+					boardCopy[index + 1] = "ship3";
+					boardCopy[index + 2] = "ship3";
+					setShipThree([index, index + 1, index + 2]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your FOURTH ship (4 squares)"
+					);
+				}
+			}
+			//direction DOWN
+			if (
+				whichDirection === 2 &&
+				shipThree.length === 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index + 20 > 99 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 10] !== null ||
+					boardCopy[index + 20] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index + 20 <= 99 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 10] === null &&
+					boardCopy[index + 20] === null
+				) {
+					boardCopy[index] = "ship3";
+					boardCopy[index + 10] = "ship3";
+					boardCopy[index + 20] = "ship3";
+					setShipThree([index, index + 10, index + 20]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your FOURTH ship (4 squares)"
+					);
+				}
+			}
+			//direction LEFT
+			if (
+				whichDirection === 3 &&
+				shipThree.length === 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip3Left.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 1] !== null ||
+					boardCopy[index - 2] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip3Left.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 1] === null &&
+					boardCopy[index - 2] === null
+				) {
+					boardCopy[index] = "ship3";
+					boardCopy[index - 1] = "ship3";
+					boardCopy[index - 2] = "ship3";
+					setShipThree([index, index - 1, index - 2]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake(
+						"Ok, now select direction and then the position of your FOURTH ship (4 squares)"
+					);
+				}
+			}
+
+			// ship4
+			//direction UP
+			if (
+				whichDirection === 0 &&
+				shipFour.length === 0 &&
+				shipThree.length !== 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index - 30 < 0 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 10] !== null ||
+					boardCopy[index - 20] !== null ||
+					boardCopy[index - 30] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index - 30 >= 0 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 10] === null &&
+					boardCopy[index - 20] === null &&
+					boardCopy[index - 30] === null
+				) {
+					boardCopy[index] = "ship4";
+					boardCopy[index - 10] = "ship4";
+					boardCopy[index - 20] = "ship4";
+					boardCopy[index - 30] = "ship4";
+					setShipFour([index, index - 10, index - 20, index - 30]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake("All done!");
+					setSendShip(true);
+				}
+			}
+			//direction RIGHT
+			if (
+				whichDirection === 1 &&
+				shipFour.length === 0 &&
+				shipThree.length !== 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip4Right.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 1] !== null ||
+					boardCopy[index + 2] !== null ||
+					boardCopy[index + 3] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip4Right.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 1] === null &&
+					boardCopy[index + 2] === null &&
+					boardCopy[index + 3] === null
+				) {
+					boardCopy[index] = "ship4";
+					boardCopy[index + 1] = "ship4";
+					boardCopy[index + 2] = "ship4";
+					boardCopy[index + 3] = "ship4";
+					setShipFour([index, index + 1, index + 2, index + 3]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake("All done!");
+					setSendShip(true);
+				}
+			}
+			//direction DOWN
+			if (
+				whichDirection === 2 &&
+				shipFour.length === 0 &&
+				shipThree.length !== 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					index + 30 > 99 ||
+					boardCopy[index] !== null ||
+					boardCopy[index + 10] !== null ||
+					boardCopy[index + 20] !== null ||
+					boardCopy[index + 30] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					index + 30 <= 99 &&
+					boardCopy[index] === null &&
+					boardCopy[index + 10] === null &&
+					boardCopy[index + 20] === null &&
+					boardCopy[index + 30] === null
+				) {
+					boardCopy[index] = "ship4";
+					boardCopy[index + 10] = "ship4";
+					boardCopy[index + 20] = "ship4";
+					boardCopy[index + 30] = "ship4";
+					setShipFour([index, index + 10, index + 20, index + 30]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake("All done!");
+					setSendShip(true);
+				}
+			}
+			//direction LEFT
+			if (
+				whichDirection === 3 &&
+				shipFour.length === 0 &&
+				shipThree.length !== 0 &&
+				shipTwoSecond.length !== 0 &&
+				shipTwo.length !== 0
+			) {
+				if (
+					forbiddenPositionShip4Left.indexOf(index) !== -1 ||
+					boardCopy[index] !== null ||
+					boardCopy[index - 1] !== null ||
+					boardCopy[index - 2] !== null ||
+					boardCopy[index - 3] !== null
+				) {
+					setMessage("Wrong position, try again");
+				}
+				if (
+					forbiddenPositionShip4Left.indexOf(index) === -1 &&
+					boardCopy[index] === null &&
+					boardCopy[index - 1] === null &&
+					boardCopy[index - 2] === null &&
+					boardCopy[index - 3] === null
+				) {
+					boardCopy[index] = "ship4";
+					boardCopy[index - 1] = "ship4";
+					boardCopy[index - 2] = "ship4";
+					boardCopy[index - 3] = "ship4";
+					setShipFour([index, index - 1, index - 2, index - 3]);
+					setBoard(boardCopy);
+					setMessage("");
+					setWhichShipToMake("All done!");
+					setSendShip(true);
+				}
+			}
+		} else {
+			setMessage("First, you must select direction of your ship");
+		}
+	};
+
+	const startGameFunction = () => {
+		// console.log("yourship inside startgame", objectShipData);
+		// console.log("enemy ship inside start game", shipFourEnemy);
+		// if (shipFour.length !== 0 && shipFourEnemy.length !== 0) {
+		console.log("startGame");
+		if (turn === null) {
 			setTurn(WhoseTurn);
 			if (WhoseTurn === yourName) {
 				setDisabled(false);
 			}
-			setRenderBoards(true);
-			setStartGame(null);
 		}
-		// need to fix dependency array
-	}, [startGame]);
-
-	const getRandomPosition = (array) => {
-		let random = Math.floor(Math.random() * 100);
-		if (array.length === 10) {
-			if (array.indexOf(random) !== -1) {
-				return ++random;
-			} else {
-				return random;
-			}
-		}
-		if (array.length === 20) {
-			if (array.indexOf(random) !== -1) {
-				random++;
-				if (array.indexOf(random) !== -1) {
-					return ++random;
-				}
-			} else {
-				return random;
-			}
-		}
-		if (array.length === 30) {
-			if (array.indexOf(random) !== -1) {
-				random++;
-				if (array.indexOf(random) !== -1) {
-					random++;
-				}
-				if (array.indexOf(random) !== -1) {
-					return ++random;
-				}
-			} else {
-				return random;
-			}
-		}
-	};
-
-	const ship2 = () => {
-		const startPos = getRandomPosition([
-			9, 19, 29, 39, 49, 59, 69, 79, 89, 99,
-		]);
-		return [startPos, startPos + 1];
-	};
-	const ship3 = () => {
-		const startPos = getRandomPosition([
-			8, 9, 18, 19, 28, 29, 38, 39, 48, 49, 58, 59, 68, 69, 78, 79, 88,
-			89, 98, 99,
-		]);
-		return [startPos, startPos + 1, startPos + 2];
-	};
-	const ship4 = () => {
-		const startPos = getRandomPosition([
-			7, 8, 9, 17, 18, 19, 27, 28, 29, 37, 38, 39, 47, 48, 49, 57, 58, 59,
-			67, 68, 69, 77, 78, 79, 87, 88, 89, 97, 98, 99,
-		]);
-		return [startPos, startPos + 1, startPos + 2, startPos + 3];
-	};
-
-	const setShips = () => {
-		setShipRemain([1, 2, 3, 4]);
-		setShipRemainEnemy([1, 2, 3, 4]);
-		let isReady = true;
-		while (isReady) {
-			let boardCopy = [...board];
-			const randomShip2 = ship2();
-			if (
-				boardCopy[randomShip2[0]] === null &&
-				boardCopy[randomShip2[1]] === null
-			) {
-				boardCopy[randomShip2[0]] = "ship2";
-				boardCopy[randomShip2[1]] = "ship2";
-			}
-
-			let randomShip2Second = ship2();
-			if (
-				boardCopy[randomShip2Second[0]] === null &&
-				boardCopy[randomShip2Second[1]] === null
-			) {
-				boardCopy[randomShip2Second[0]] = "ship2Second";
-				boardCopy[randomShip2Second[1]] = "ship2Second";
-			}
-
-			let randomShip3 = ship3();
-			if (
-				boardCopy[randomShip3[0]] === null &&
-				boardCopy[randomShip3[1]] === null &&
-				boardCopy[randomShip3[2]] === null
-			) {
-				boardCopy[randomShip3[0]] = "ship3";
-				boardCopy[randomShip3[1]] = "ship3";
-				boardCopy[randomShip3[2]] = "ship3";
-			}
-
-			let randomShip4 = ship4();
-			if (
-				boardCopy[randomShip4[0]] === null &&
-				boardCopy[randomShip4[1]] === null &&
-				boardCopy[randomShip4[2]] === null &&
-				boardCopy[randomShip4[3]] === null
-			) {
-				boardCopy[randomShip4[0]] = "ship4";
-				boardCopy[randomShip4[1]] = "ship4";
-				boardCopy[randomShip4[2]] = "ship4";
-				boardCopy[randomShip4[3]] = "ship4";
-			}
-
-			if (
-				boardCopy[randomShip3[0]] === "ship3" &&
-				boardCopy[randomShip2Second[0]] === "ship2Second" &&
-				boardCopy[randomShip4[0]] === "ship4"
-			) {
-				setShipTwo([randomShip2[0], randomShip2[1]]);
-				setShipTwoSecond([randomShip2Second[0], randomShip2Second[1]]);
-				setShipThree([randomShip3[0], randomShip3[1], randomShip3[2]]);
-				setShipFour([
-					randomShip4[0],
-					randomShip4[1],
-					randomShip4[2],
-					randomShip4[3],
-				]);
-				setBoard(boardCopy);
-				setStartGame(true);
-				isReady = false;
-			}
-		}
+		// setRenderBoards(true);
+		setBoardReady(true);
 	};
 
 	const shipsRemaining = (shipArray, square, totalShips) => {
@@ -189,6 +680,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			shipArray.splice(shipIndex, 1);
 			if (shipArray.length === 0) {
 				totalShips.pop();
+				console.log("total ships ", totalShips);
+				socket.emit("ships-remaining", game_id, totalShips);
 			}
 		}
 	};
@@ -204,54 +697,90 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	};
 
 	const handleClick = (clickedSquare) => {
-		socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
-		const boardCopy = [...boardEnemy];
-		const clickedShip = boardCopy[clickedSquare];
+		if (disabled === false) {
+			socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
+			const boardCopy = [...boardEnemy];
+			const clickedShip = boardCopy[clickedSquare];
 
-		if (
-			clickedShip !== null &&
-			clickedShip !== "missShip" &&
-			clickedShip !== "hitShip"
-		) {
-			boardCopy[clickedSquare] = "hitShip";
+			if (
+				clickedShip !== null &&
+				clickedShip !== "missShip" &&
+				clickedShip !== "hitShip"
+			) {
+				boardCopy[clickedSquare] = "hitShip";
+				console.log("shipRemainEnemy1", shipRemainEnemy);
+				if (clickedShip === "ship3Enemy") {
+					shipsRemaining(
+						shipThreeEnemy,
+						clickedSquare,
+						shipRemainEnemy
+					);
+					console.log("ship 3 enemy:", shipThreeEnemy);
+					console.log("ship remain enemy:", shipRemainEnemy);
+				}
+				if (clickedShip === "ship4Enemy") {
+					shipsRemaining(
+						shipFourEnemy,
+						clickedSquare,
+						shipRemainEnemy
+					);
+				}
+				if (clickedShip === "ship2Enemy") {
+					shipsRemaining(
+						shipTwoEnemy,
+						clickedSquare,
+						shipRemainEnemy
+					);
+				}
+				if (clickedShip === "ship2SecondEnemy") {
+					shipsRemaining(
+						shipTwoSecondEnemy,
+						clickedSquare,
+						shipRemainEnemy
+					);
+				}
+				if (shipRemainEnemy.length === 0) {
+					console.log("shipRemainEnemy2", shipRemainEnemy);
+					// emit the winner to server
+					socket.emit("game-over", gameUsername, game_id);
+				}
+			} else if (clickedShip === null) {
+				boardCopy[clickedSquare] = "missShip";
+			}
 
-			if (clickedShip === "ship3Enemy") {
-				shipsRemaining(shipThreeEnemy, clickedSquare, shipRemainEnemy);
-				console.log("ship 3 enemy:", shipThreeEnemy);
-				console.log("ship remain enemy:", shipRemainEnemy);
-			}
-			if (clickedShip === "ship4Enemy") {
-				shipsRemaining(shipFourEnemy, clickedSquare, shipRemainEnemy);
-			}
-			if (clickedShip === "ship2Enemy") {
-				shipsRemaining(shipTwoEnemy, clickedSquare, shipRemainEnemy);
-			}
-			if (clickedShip === "ship2SecondEnemy") {
-				shipsRemaining(
-					shipTwoSecondEnemy,
-					clickedSquare,
-					shipRemainEnemy
-				);
-			}
-			if (shipRemainEnemy.length === 0) {
-				// emit the winner to server
-				socket.emit("game-over", gameUsername, game_id);
-			}
-		} else if (clickedShip === null) {
-			boardCopy[clickedSquare] = "missShip";
+			setBoardEnemy(boardCopy);
+			setTurn(whoEnemy);
+			setDisabled(true);
+			// socket.emit("whose-turn", whoEnemy, game_id);
 		}
-
-		setBoardEnemy(boardCopy);
-		// setTurn(whoEnemy);
-		// setDisabled(true);
-		// socket.emit("whose-turn", whoEnemy, game_id);
 	};
 
-	socket.on("get-whose-turn", handleWhoseTurn);
+	/*
+	const handleStartGame = () => {
+		console.log("starting game , start-game");
+		setShipRemain([1, 2, 3, 4]);
+		setShipRemainEnemy([1, 2, 3, 4]);
 
-	socket.on("get-enemy-click", (attackClick) => {
-		let boardCopy = [...board];
+		// setStartGame(true);
+		console.log("ship two", shipTwo);
+		console.log("ship two enemy", shipTwoEnemy);
+		if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
+			if (turn === null) {
+				setTurn(WhoseTurn);
+				if (WhoseTurn === yourName) {
+					setDisabled(false);
+				}
+			}
+			// setRenderBoards(true);
+			setBoardReady(true);
+		}
+	};*/
+
+	const handleGetEnemyClick = (attackClick) => {
+		// if (disabled === true) {
+		const boardCopy = [...board];
 		const clickedShip = boardCopy[attackClick];
+		// console.log()
 
 		if (
 			clickedShip !== null &&
@@ -259,20 +788,27 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			clickedShip !== "hitShip"
 		) {
 			boardCopy[attackClick] = "hitShip";
+			console.log("shipRemain1", shipRemain);
 			console.log("hit ship", clickedShip);
+			/*
 			if (clickedShip === "ship3") {
+				console.log("ship 3 remaining", shipThree);
 				shipsRemaining(shipThree, attackClick, shipRemain);
 			}
 			if (clickedShip === "ship4") {
+				console.log("ship4 remaining", shipFour);
 				shipsRemaining(shipFour, attackClick, shipRemain);
 			}
 			if (clickedShip === "ship2") {
+				console.log("ship 2 remaining", shipTwo);
 				shipsRemaining(shipTwo, attackClick, shipRemain);
 			}
 			if (clickedShip === "ship2Second") {
+				console.log("ship 2 2 remaining", shipTwoSecond);
 				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
-			}
+			}*/
 			if (shipRemain.length === 0) {
+				console.log("No ships remaining", shipRemain);
 				setWinnerEnemy(true);
 			}
 		} else if (clickedShip === null) {
@@ -280,42 +816,57 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 
 		setBoard(boardCopy);
+		// }
 		// setTurn(youName);
 		// setDisabled(true);
 		// socket.emit("whose-turn", youName, game_id);
-	});
+	};
 
-	socket.on("get-ship-data", (shipData) => {
-		let boardCopyEnemy = [...boardEnemy];
-		setShipTwoEnemy(shipData.shipTwo);
-		boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
-		boardCopyEnemy[shipData.shipTwo[1]] = "ship2Enemy";
-		setShipTwoSecondEnemy(shipData.shipTwoSecond);
-		boardCopyEnemy[shipData.shipTwoSecond[0]] = "ship2SecondEnemy";
-		boardCopyEnemy[shipData.shipTwoSecond[1]] = "ship2SecondEnemy";
-		setShipThreeEnemy(shipData.shipThree);
-		boardCopyEnemy[shipData.shipThree[0]] = "ship3Enemy";
-		boardCopyEnemy[shipData.shipThree[1]] = "ship3Enemy";
-		boardCopyEnemy[shipData.shipThree[2]] = "ship3Enemy";
-		setShipFourEnemy(shipData.shipFour);
-		boardCopyEnemy[shipData.shipFour[0]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[1]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[2]] = "ship4Enemy";
-		boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
-		setBoardEnemy(boardCopyEnemy);
-	});
+	const handleGetShipData = async (shipData) => {
+		console.log("shipData.shipTwo.length", shipData.shipTwo.length);
+		console.log("shipData.shipfour.length", shipData.shipFour.length);
+		if (
+			shipData.shipTwo.length !== 0 &&
+			shipData.shipTwoSecond.length !== 0 &&
+			shipData.shipThree.length !== 0 &&
+			shipData.shipFour.length !== 0
+		) {
+			console.log("inside handleship data");
+			let boardCopyEnemy = [...boardEnemy];
+			setShipTwoEnemy(shipData.shipTwo);
+			boardCopyEnemy[shipData.shipTwo[0]] = "ship2Enemy";
+			boardCopyEnemy[shipData.shipTwo[1]] = "ship2Enemy";
+			setShipTwoSecondEnemy(shipData.shipTwoSecond);
+			boardCopyEnemy[shipData.shipTwoSecond[0]] = "ship2SecondEnemy";
+			boardCopyEnemy[shipData.shipTwoSecond[1]] = "ship2SecondEnemy";
+			setShipThreeEnemy(shipData.shipThree);
+			boardCopyEnemy[shipData.shipThree[0]] = "ship3Enemy";
+			boardCopyEnemy[shipData.shipThree[1]] = "ship3Enemy";
+			boardCopyEnemy[shipData.shipThree[2]] = "ship3Enemy";
+			setShipFourEnemy(shipData.shipFour);
+			boardCopyEnemy[shipData.shipFour[0]] = "ship4Enemy";
+			boardCopyEnemy[shipData.shipFour[1]] = "ship4Enemy";
+			boardCopyEnemy[shipData.shipFour[2]] = "ship4Enemy";
+			boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
+			setBoardEnemy(boardCopyEnemy);
+			setEnemyShipsReady(true);
+			// socket.emit("player-ready", game_id);
+		}
+	};
 
-	socket.on("winner", (username) => {
+	socket.on("get-enemy-click", handleGetEnemyClick);
+
+	const handleWinner = (username) => {
 		if (username === gameUsername) {
 			setWinner(true);
 		} else if (username !== gameUsername) {
 			setWinnerEnemy(true);
 		}
-	});
+	};
 
 	return (
 		<>
-			{renderBoards && (
+			{boardReady && (
 				<>
 					<div className="turn-tag">
 						<h2 className="whose-turn">Whose turn?</h2>{" "}
@@ -343,7 +894,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								</div>
 							)}
 						</div>
-
 						<div className="game-board game-board-enemy">
 							<div className="username">
 								<span className="game-title">Enemy: </span>
@@ -369,6 +919,55 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						</div>
 						{winner && <Victory />}
 						{winnerEnemy && <Loser />}
+					</div>
+				</>
+			)}
+			{!boardReady && (
+				<>
+					<div className="game-board game-board-you">
+						<h3 className="game-title game-title-you">
+							You: {yourName}
+						</h3>
+						<p className="text-directions">
+							Directions of the ship:
+						</p>
+						<div className="directions-buttons">
+							<button
+								className={`${clickedButtonUp}`}
+								onClick={handlePositionUp}
+							>
+								Up
+							</button>
+							<button
+								className={`${clickedButtonRight}`}
+								onClick={handlePositionRight}
+							>
+								Right
+							</button>
+							<button
+								className={`${clickedButtonDown}`}
+								onClick={handlePositionDown}
+							>
+								Down
+							</button>
+							<button
+								className={`${clickedButtonLeft}`}
+								onClick={handlePositionLeft}
+							>
+								Left
+							</button>
+						</div>
+						<p className="messageToPlayer">{whichShipToMake}</p>
+						<p className="messageToPlayer2">{message}</p>
+						<div
+							className="game-wrapper game-wrapper-you"
+							style={{ marginBottom: "50px" }}
+						>
+							<Gameboard
+								squares={board}
+								onClick={setUpYourShips}
+							/>
+						</div>
 					</div>
 				</>
 			)}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
-import Loser from "../components/Loser";
+// import Loser from "../components/Loser"
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png";
 import "normalize.css";
@@ -21,7 +21,7 @@ const BattleboardPage = () => {
 	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
-		console.log("Got new playerlist", playerlist);
+		// console.log("Got new playerlist", playerlist);
 		// setPlayers(playerlist);
 		setTurn(Object.values(playerlist)[0]);
 
@@ -51,14 +51,10 @@ const BattleboardPage = () => {
 
 		// emit join request
 		socket.emit("player:joined", gameUsername, game_id, (status) => {
-			console.log(
-				`Successfully joined ${game_id} as ${gameUsername}`,
-				status
-			);
-
-			setDisconnectedMsg(false);
-			setDisconnected("");
-
+			// console.log(
+			// 	`Successfully joined ${game_id} as ${gameUsername}`,
+			// 	status
+			// );
 			// setConnected(true);
 		});
 
@@ -72,7 +68,7 @@ const BattleboardPage = () => {
 		});
 
 		return () => {
-			console.log("Running cleanup");
+			// console.log("Running cleanup");
 
 			// socket.off("player:list", handleUpdatePlayers);
 
