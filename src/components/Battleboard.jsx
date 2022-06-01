@@ -1,6 +1,8 @@
 import Gameboard from "./Gameboard";
 import Loser from "../components/Loser";
 import Victory from "../components/Victory";
+import avatar1 from "../assets/images/avatar1.png"
+import avatar2 from "../assets/images/avatar2.png"
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
@@ -828,63 +830,66 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		<>
 			{boardReady && (
 				<>
-					<div className="turn-tag">
-						<h2 className="whose-turn">Whose turn?</h2>{" "}
-						<span className="whose-turn-name">{turn}</span>
-					</div>
-
-					<div className="game-container">
-						<div className="game-board game-board-you">
-							<div className="username">
-								<span className="game-title">You: </span>
-								<span className="game-title-you">
-									{gameUsername}
-								</span>
-							</div>
-
-							<p className="ships-remain-text">
-								Ships remaining:{" "}
-								<span className="ships-remain-text-bold">
-									{shipRemain.length}
-								</span>
-							</p>
-							{!winner && !winnerEnemy && (
-								<div className="game-wrapper game-wrapper-you">
-									<Gameboard squares={board} />
-								</div>
-							)}
+					{!winner && !winnerEnemy && (
+						<div className="turn-tag">
+							<h2 className="whose-turn">Whose turn?</h2>{" "}
+							<span className="whose-turn-name">{turn}</span>
 						</div>
-						<div className="game-board game-board-enemy">
-							<div className="username">
-								<span className="game-title">Enemy: </span>
-								<span className="game-title-you">
-									{whoEnemy}
-								</span>
-							</div>
-
-							<p className="ships-remain-text">
-								Ships remaining:{" "}
-								<span className="ships-remain-text-bold">
-									{shipRemainEnemy.length}
-								</span>
-							</p>
-							{!winner && !winnerEnemy && (
-								<div className="game-wrapper game-wrapper-enemy">
-									<Gameboard
-										squares={boardEnemy}
-										onClick={handleClick}
-									/>
+					)}
+					{!winner && !winnerEnemy && (
+						<div className="game-container">
+							<div className="game-board game-board-you">
+								<div className="username">
+									<span className="game-title"><img src={avatar1} alt="" /></span>
+									<span className="game-title-you">
+										{gameUsername}
+									</span>
 								</div>
-							)}
+
+								<p className="ships-remain-text">
+									Ships remaining:{" "}
+									<span className="ships-remain-text-bold">
+										{shipRemain.length}
+									</span>
+								</p>
+								{!winner && !winnerEnemy && (
+									<div className="game-wrapper game-wrapper-you">
+										<Gameboard squares={board} />
+									</div>
+								)}
+							</div>
+							<div className="game-board game-board-enemy">
+								<div className="username">
+									<span className="game-title"><img src={avatar2} alt="" /></span>
+									<span className="game-title-you">
+										{whoEnemy}
+									</span>
+								</div>
+
+								<p className="ships-remain-text">
+									Ships remaining:{" "}
+									<span className="ships-remain-text-bold">
+										{shipRemainEnemy.length}
+									</span>
+								</p>
+								{!winner && !winnerEnemy && (
+									<div className="game-wrapper game-wrapper-enemy">
+										<Gameboard
+											squares={boardEnemy}
+											onClick={handleClick}
+										/>
+									</div>
+								)}
+							</div>
 						</div>
-					</div>
+					)}
 	
 					{winner && (
 						<>
 							<div className="victory-page">
 								<Victory /> 
-								<div className="replayBtn">
-									<button className="replayBtn-primary" onClick={startGame}>Play again</button>
+								<div className="exitBtn">
+									<button className="exitBtn-primary" onClick={() => window.location.reload(false)}>Click to exit</button>
 								</div>
 							</div>
 						</>	
@@ -894,8 +899,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						<>
 							<div className="loser-page">
 								<Loser />
-								<div className="replayBtn">
-									<button className="replayBtn-primary" onClick={startGame}>Play again</button>
+								<div className="exitBtn">
+									<button className="exitBtn-primary" onClick={() => window.location.reload(false)}>Click to exit</button>
 								</div>
 							</div>
 						</>
@@ -906,13 +911,13 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			{!boardReady && (
 				<>
 					<div className="game-board game-board-you">
-						<h3 className="game-title game-title-you">
-							You: {yourName}
-						</h3>
+						<div className="turn-tag">
+							<span className="whose-turn-name">{yourName}</span>
+						</div>	
 						<p className="text-directions">
 							Directions of the ship:
 						</p>
-						<div className="directions-buttons">
+						<div className="directions-buttons nohover">
 							<button
 								className={`${clickedButtonUp}`}
 								onClick={handlePositionUp}
@@ -938,8 +943,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								Left
 							</button>
 						</div>
-						<p className="messageToPlayer">{whichShipToMake}</p>
-						<p className="messageToPlayer2">{message}</p>
+						<div className="messageToPlayer">{whichShipToMake}</div>
+						<div className="messageToPlayer2">{message}</div>
 						<div
 							className="game-wrapper game-wrapper-you"
 							style={{ marginBottom: "50px" }}
