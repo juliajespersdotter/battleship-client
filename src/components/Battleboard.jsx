@@ -912,7 +912,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
-										onClick={disabled ? true : handleClick}
+										onClick={handleClick}
 									/>
 								</div>
 							)}
