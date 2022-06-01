@@ -317,54 +317,76 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		<>
 			{renderBoards && (
 				<>
-					<div className="turn-tag">
-						<h2 className="whose-turn">Whose turn?</h2> <span className="whose-turn-name">{turn}</span>
-					</div>
-
-					<div className="game-container">
-						<div className="game-board game-board-you">
-							<div className="username">
-								<span className="game-title">You: </span>
-								<span className="game-title-you">{gameUsername}</span>
-							</div>
-							
-							<p className="ships-remain-text">
-								Ships remaining:{" "}
-								<span className="ships-remain-text-bold">
-									{shipRemain.length}
-								</span>
-							</p>
-							{!winner && !winnerEnemy && (
-								<div className="game-wrapper game-wrapper-you">
-									<Gameboard squares={board} />
-								</div>
-							)}
+					{!winner && !winnerEnemy && (
+						<div className="turn-tag">
+							<h2 className="whose-turn">Whose turn?</h2> <span className="whose-turn-name">{turn}</span>
 						</div>
-
-						<div className="game-board game-board-enemy">
-							<div className="username">
-								<span className="game-title">Enemy: </span>
-								<span className="game-title-you">{whoEnemy}</span>
+					)}	
+					{!winner && !winnerEnemy && (
+						<div className="game-container">
+							<div className="game-board game-board-you">
+								<div className="username">
+									<span className="game-title">You: </span>
+									<span className="game-title-you">{gameUsername}</span>
+								</div>
+								
+								<p className="ships-remain-text">
+									Ships remaining:{" "}
+									<span className="ships-remain-text-bold">
+										{shipRemain.length}
+									</span>
+								</p>
+								{!winner && !winnerEnemy && (
+									<div className="game-wrapper game-wrapper-you">
+										<Gameboard squares={board} />
+									</div>
+								)}
 							</div>
-							
-							<p className="ships-remain-text">
-								Ships remaining:{" "}
-								<span className="ships-remain-text-bold">
-									{shipRemainEnemy.length}
-								</span>
-							</p>
-							{!winner && !winnerEnemy && (
+
+							<div className="game-board game-board-enemy">
+								<div className="username">
+									<span className="game-title">Enemy: </span>
+									<span className="game-title-you">{whoEnemy}</span>
+								</div>
+								
+								<p className="ships-remain-text">
+									Ships remaining:{" "}
+									<span className="ships-remain-text-bold">
+										{shipRemainEnemy.length}
+									</span>
+								</p>
+								
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
 										onClick={disabled ? true : handleClick}
 									/>
 								</div>
-							)}
+							</div>
 						</div>
-						{winner && <Victory />}
-						{winnerEnemy && <Loser />}
-					</div>
+					)}
+	
+					{winner && (
+						<>
+							<div className="victory-page">
+								<Victory /> 
+								<div className="replayBtn">
+									<button className="replayBtn-primary" onClick={startGame}>Play again</button>
+								</div>
+							</div>
+						</>	
+					)}
+
+					{winnerEnemy && (
+						<>
+							<div className="loser-page">
+								<Loser />
+								<div className="replayBtn">
+									<button className="replayBtn-primary" onClick={startGame}>Play again</button>
+								</div>
+							</div>
+						</>
+					)}
 				</>
 			)}
 		</>

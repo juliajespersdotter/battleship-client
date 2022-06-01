@@ -12,9 +12,9 @@
 	flex-direction: column;
 }
 
-.game-header {
+/* .game-header {
 	flex-grow: 1;
-}
+} */
 
 /* #players {
 	display: flex;
@@ -58,15 +58,17 @@ p {
     justify-content: center; */
 }
 .game-header-title img{
-	width: 80px;
+	width: 100px;
 }
 
 .game-tagline {
-	margin-right: 10px;
+	margin-right: 20px;
 }
 
 .room-name {
 	display: flex;
+	font-size: 1.5em;
+	text-transform: uppercase;
 }
 
 .room-name-tagline {

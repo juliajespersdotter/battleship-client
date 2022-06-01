@@ -13,3 +13,7 @@
 
 	backdrop-filter: blur(5px);
 }
+
+.victory-bg img {
+	max-width: 450px;
+}

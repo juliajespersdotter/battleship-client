@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
-import Loser from "../components/Loser"
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png"
 import 'normalize.css';
@@ -90,7 +89,6 @@ const BattleboardPage = () => {
 			{waiting && (
 					<div>
 						<WaitingRoom />
-						{/* <Loser /> */}
 					</div>
 			)}
 

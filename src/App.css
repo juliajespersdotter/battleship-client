@@ -143,3 +143,19 @@
 
     backdrop-filter: blur(5px);
 }
+.replayBtn {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+.replayBtn-primary {
+    font-size: 2em;
+    background-color: rgb(148, 255, 255);
+    border-radius: 5px;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);;
+}
+
+.replayBtn-primary:hover {
+    font-size: 2.6em;
+}
