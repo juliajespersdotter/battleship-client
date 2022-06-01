@@ -698,9 +698,12 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 
 	const handleClick = (clickedSquare) => {
 		if (disabled === false) {
-			socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
 			const boardCopy = [...boardEnemy];
 			const clickedShip = boardCopy[clickedSquare];
+
+			if (clickedShip !== "missShip" && clickedShip !== "hitShip") {
+				socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
+			}
 
 			if (
 				clickedShip !== null &&
@@ -744,37 +747,19 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					// emit the winner to server
 					socket.emit("game-over", gameUsername, game_id);
 				}
+
+				// setTurn(whoEnemy);
+				// setDisabled(true);
 			} else if (clickedShip === null) {
 				boardCopy[clickedSquare] = "missShip";
+				// setTurn(whoEnemy);
+				// setDisabled(true);
 			}
-
 			setBoardEnemy(boardCopy);
-			setTurn(whoEnemy);
-			setDisabled(true);
+
 			// socket.emit("whose-turn", whoEnemy, game_id);
 		}
 	};
-
-	/*
-	const handleStartGame = () => {
-		console.log("starting game , start-game");
-		setShipRemain([1, 2, 3, 4]);
-		setShipRemainEnemy([1, 2, 3, 4]);
-
-		// setStartGame(true);
-		console.log("ship two", shipTwo);
-		console.log("ship two enemy", shipTwoEnemy);
-		if (shipTwo.length !== 0 && shipTwoEnemy.length !== 0) {
-			if (turn === null) {
-				setTurn(WhoseTurn);
-				if (WhoseTurn === yourName) {
-					setDisabled(false);
-				}
-			}
-			// setRenderBoards(true);
-			setBoardReady(true);
-		}
-	};*/
 
 	const handleGetEnemyClick = (attackClick) => {
 		// if (disabled === true) {
@@ -790,23 +775,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			boardCopy[attackClick] = "hitShip";
 			console.log("shipRemain1", shipRemain);
 			console.log("hit ship", clickedShip);
-			/*
-			if (clickedShip === "ship3") {
-				console.log("ship 3 remaining", shipThree);
-				shipsRemaining(shipThree, attackClick, shipRemain);
-			}
-			if (clickedShip === "ship4") {
-				console.log("ship4 remaining", shipFour);
-				shipsRemaining(shipFour, attackClick, shipRemain);
-			}
-			if (clickedShip === "ship2") {
-				console.log("ship 2 remaining", shipTwo);
-				shipsRemaining(shipTwo, attackClick, shipRemain);
-			}
-			if (clickedShip === "ship2Second") {
-				console.log("ship 2 2 remaining", shipTwoSecond);
-				shipsRemaining(shipTwoSecond, attackClick, shipRemain);
-			}*/
 			if (shipRemain.length === 0) {
 				console.log("No ships remaining", shipRemain);
 				setWinnerEnemy(true);
@@ -912,7 +880,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								<div className="game-wrapper game-wrapper-enemy">
 									<Gameboard
 										squares={boardEnemy}
-										onClick={disabled ? true : handleClick}
+										onClick={handleClick}
 									/>
 								</div>
 							)}
