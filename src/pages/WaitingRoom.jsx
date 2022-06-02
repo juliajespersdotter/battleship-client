@@ -7,6 +7,10 @@ const WaitingRoom = () => {
 			<div className="loadingRoom-wrapper">
 				<h2 className="loadingRoom-tagline">Waiting for player...</h2>
 				<img className="loadingRoom-img" src={loading} alt="waiting img" />
+			</div>
+
+			<div className="exitBtn">
+				<button className="exitBtn-primary" onClick={() => window.location.reload(false)}>Click to exit</button>
 			</div>		
 		</div>
 	

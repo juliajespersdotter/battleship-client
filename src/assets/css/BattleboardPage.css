@@ -10,41 +10,8 @@
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 }
-
-.game-header {
-	flex-grow: 1;
-}
-
-/* #players {
-	display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#players h2 {
-	font-weight: 700;
-}
-
-.online-players {
-	list-style: none;
-    display: flex;
-	padding: 0;
-}
-
-.online-players li {
-	border: solid;
-    border-radius: 10px;
-    font-size: 2em;
-    padding: 10px 20px;
-	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
-	background-color: rgba(255, 255, 255, 0.15);
-	margin-right: 24px;
-}
-
-.online-players li:last-child {
-	margin: 0;
-} */
 
 p {
 	font-size: 2em;
@@ -54,21 +21,36 @@ p {
 .game-header-title {
 	display: flex;
 	margin: 20px 0px 0px 20px;
-    /* flex-direction: row-reverse;
-    justify-content: center; */
 }
 .game-header-title img{
-	width: 80px;
+	width: 100px;
 }
 
 .game-tagline {
-	margin-right: 10px;
+	margin-right: 20px;
 }
 
 .room-name {
 	display: flex;
+	font-size: 1.5em;
+	text-transform: uppercase;
 }
 
 .room-name-tagline {
 	margin-top: auto;
+}
+
+.disconnected {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    background-color: red;
+    border-radius: 15px;
+	width: fit-content;
+	padding: 0 20px;
+	margin: 20px 0 0 20px;
+}
+
+.disconnected-tag {
+	margin: 0;
+	color: white;
 }

@@ -1,11 +1,14 @@
+.loser-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .wave2 {
-    background-image: url("../images/lost2.gif");
+    background-image: url("../images/lost.gif");
     background-size: cover;
-    font-size: 6em;
-    position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	height: 500px;
+    font-size: 5.5em;
 	border-radius: 10px;
 	width: 50rem;
 	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
@@ -17,5 +20,11 @@
 
 .wave2-tag {
     color: rgba(255, 255, 255, 0.15);
+	margin: 0;
+	padding-top: 150px;
+}
+
+.loser-wrapper {
+	margin-bottom: 40px;
 
 }
