@@ -10,7 +10,6 @@ const Login = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
 	const [generateRoom, setGenerateRoom] = useState(false);
-	// const [customGame, setCustomGame] = useState("");
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -21,6 +20,7 @@ const Login = () => {
 		// set game username
 		setGameUsername(username);
 
+		// generate random room name
 		if (generateRoom) {
 			console.log(generateRoom);
 			const randomName = uniqueNamesGenerator({
@@ -28,7 +28,6 @@ const Login = () => {
 				separator: "-",
 				length: 1,
 			});
-			console.log(randomName);
 			navigate(`/games/${randomName}`);
 		} else if (game) {
 			navigate(`/games/${game}`);
@@ -37,13 +36,10 @@ const Login = () => {
 		socket.emit("update-list");
 	};
 
-	// as soon as the component is mounted, request room list
+	// as soon as the component is mounted, request game list
 	useEffect(() => {
-		// console.log("Requesting game list from server...");
-
-		// change this???
+		// update game list on Login screen
 		socket.on("new-game-list", () => {
-			console.log("new game list");
 			socket.emit("get-game-list", (games) => {
 				const list = games.filter((game) => game.id);
 				setGamelist(list);
@@ -52,20 +48,17 @@ const Login = () => {
 
 		socket.emit("get-game-list", (games) => {
 			const list = games.filter((game) => game.id);
-			// console.log(list);
 			setGamelist(list);
 		});
 	}, [socket]);
 
 	return (
 		<div className="loginPage">
-			{/* {loading && <WaitingRoom />} */}
 			<div id="login">
 				<h1 className="login-header">Battleship Multiplayer Game</h1>
 
 				<Form onSubmit={handleSubmit}>
 					<Form.Group className="loginForm" controlId="username">
-						{/* <Form.Label>Username</Form.Label> */}
 						<Form.Control
 							onChange={(e) => setUsername(e.target.value)}
 							placeholder="Enter your username"
@@ -76,13 +69,11 @@ const Login = () => {
 					</Form.Group>
 
 					<Form.Group className="createRoom" controlId="game">
-						{/* <Form.Label>Open games</Form.Label> */}
 						<Form.Select
 							onChange={(e) => setGame(e.target.value)}
 							value={game}
 						>
 							{!gamelist.length && (
-								// <option disabled>No games currently</option>
 								<option value="">No games currently</option>
 							)}
 
