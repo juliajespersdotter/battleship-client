@@ -8,6 +8,8 @@ import "normalize.css";
 import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
+	const [disconnectedMsg, setDisconnectedMsg] = useState(false);
+	const [disconnected, setDisconnected] = useState("");
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const [enemy, setEnemy] = useState();
@@ -16,8 +18,6 @@ const BattleboardPage = () => {
 	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
-		// console.log("Got new playerlist", playerlist);
-		// setPlayers(playerlist);
 		setTurn(Object.values(playerlist)[0]);
 
 		if (Object.keys(playerlist).length === 2) {
@@ -46,11 +46,6 @@ const BattleboardPage = () => {
 
 		// emit join request
 		socket.emit("player:joined", gameUsername, game_id, (status) => {
-			// console.log(
-			// 	`Successfully joined ${game_id} as ${gameUsername}`,
-			// 	status
-			// );
-			// setConnected(true);
 		});
 
 		// listen for updated userlist
@@ -63,10 +58,6 @@ const BattleboardPage = () => {
 		});
 
 		return () => {
-			// console.log("Running cleanup");
-
-			// socket.off("player:list", handleUpdatePlayers);
-
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
@@ -89,11 +80,10 @@ const BattleboardPage = () => {
 			</div>
 
 			{waiting && (
-					<div>
-						<WaitingRoom />
-					</div>
+				<div>
+					<WaitingRoom />
+				</div>
 			)}
-
 			{!waiting && (
 				<>
 					<Battleboard
