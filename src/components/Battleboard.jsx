@@ -901,7 +901,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			{boardReady && (
 				<>
 					{!winner && !winnerEnemy && (
-						<div className="turn-tag">
+						<div className="turn-tag turn-tag-game">
 							<h2 className="whose-turn">Whose turn?</h2>{" "}
 							<span className="whose-turn-name">{turn}</span>
 						</div>
@@ -942,7 +942,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 										{whoEnemy}
 									</span>
 								</div>
-
 								<p className="ships-remain-text">
 									Ships remaining:{" "}
 									<span className="ships-remain-text-bold">
@@ -1037,7 +1036,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						<div className="messageToPlayer">{whichShipToMake}</div>
 						<div className="messageToPlayer2">{message}</div>
 						<div
-							className="game-wrapper game-wrapper-you"
+							className="game-wrapper game-wrapper-you place-ship-gameboard"
 							style={{ marginBottom: "50px" }}
 						>
 							<Gameboard

@@ -1,4 +1,6 @@
-
+body {
+    background-color: rgb(238, 238, 247);
+}
 .heading-title {
     margin-top: 20px;
     text-align: center;
@@ -257,4 +259,52 @@
 
 .user {
     margin-right: 0.3em;
+}
+
+
+@media screen and (max-width: 810px) {
+
+    .messageToPlayer {
+        width: 80%;
+        font-size: 1.5em;
+        text-align: center;
+        margin-top: 0;
+    }
+    .place-ship-gameboard{
+        width: 98%;
+    }
+    .game-wrapper{
+        width: 98%;
+        margin-top: 0;
+    }
+    .game-container{
+     display: block;
+     
+    }
+    .ships-remain-text{
+        margin-bottom: 0;
+        padding-bottom: 0;
+        text-align: left;
+    }
+    .username {
+        justify-content: left;
+    }
+    .turn-tag-game {
+        position: absolute;
+        right: 10px;
+        top: 110px;
+    }
+    #login {
+        width: 90%;
+    }
+    .loginForm, .createRoom {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .wave2 {
+        width: 98%;
+        margin: auto;
+        height: 700px;
+    }
+
 }
