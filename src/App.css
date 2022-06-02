@@ -289,11 +289,6 @@ body {
     .username {
         justify-content: left;
     }
-    .turn-tag-game {
-        position: absolute;
-        right: 10px;
-        top: 110px;
-    }
     #login {
         width: 90%;
     }
