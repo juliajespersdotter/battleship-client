@@ -4,9 +4,15 @@ import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { uniqueNamesGenerator, animals } from "unique-names-generator";
+import useSound from "use-sound";
+// import underTheSea from "../assets/sounds/underTheSea.mp3";
+import loginScreen from "../assets/sounds/loginScreen.wav";
 import "../assets/css/login.css";
+// import { wait } from "@testing-library/user-event/dist/utils";
 
 const Login = () => {
+	const [loginScreenSound, { stop }] = useSound(loginScreen);
+
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
 	const [generateRoom, setGenerateRoom] = useState(false);
@@ -31,12 +37,13 @@ const Login = () => {
 		} else if (game) {
 			navigate(`/games/${game}`);
 		}
-
+		stop();
 		socket.emit("update-list");
 	};
 
 	// as soon as the component is mounted, request game list
 	useEffect(() => {
+		loginScreenSound();
 		// update game list on Login screen
 		socket.on("new-game-list", () => {
 			socket.emit("get-game-list", (games) => {
@@ -49,7 +56,7 @@ const Login = () => {
 			const list = games.filter((game) => game.id);
 			setGamelist(list);
 		});
-	}, [socket]);
+	}, [socket, loginScreenSound]);
 
 	return (
 		<div className="loginPage">

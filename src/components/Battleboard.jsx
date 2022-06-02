@@ -1,13 +1,23 @@
 import Gameboard from "./Gameboard";
 import Loser from "../components/Loser";
 import Victory from "../components/Victory";
-import avatar1 from "../assets/images/avatar1.png"
-import avatar2 from "../assets/images/avatar2.png"
+import avatar1 from "../assets/images/avatar1.png";
+import avatar2 from "../assets/images/avatar2.png";
 import { useEffect, useState } from "react";
 import { useGameContext } from "../contexts/GameContextProvider";
 import { useParams } from "react-router-dom";
+import useSound from "use-sound";
+import destroyShip from "../assets/sounds/seaExplosion.wav";
+import missShip from "../assets/sounds/missShip.mp3";
+import hitShip from "../assets/sounds/boom.mp3";
+import placeShip from "../assets/sounds/placeShip.wav";
 
 const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
+	const [destroyShipSound] = useSound(destroyShip);
+	const [missShipSound] = useSound(missShip);
+	const [hitShipSound] = useSound(hitShip);
+	const [placeShipSound] = useSound(placeShip);
+
 	const { socket, gameUsername } = useGameContext();
 	const { game_id } = useParams();
 	const [turn, setTurn] = useState(null);
@@ -195,6 +205,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2";
 					boardCopy[index - 10] = "ship2";
 					setShipTwo([index, index - 10]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -214,6 +225,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2";
 					boardCopy[index + 1] = "ship2";
 					setShipTwo([index, index + 1]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -230,6 +242,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2";
 					boardCopy[index + 10] = "ship2";
 					setShipTwo([index, index + 10]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -249,6 +262,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2";
 					boardCopy[index - 1] = "ship2";
 					setShipTwo([index, index - 1]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -279,6 +293,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2Second";
 					boardCopy[index - 10] = "ship2Second";
 					setShipTwoSecond([index, index - 10]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -307,6 +322,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2Second";
 					boardCopy[index + 1] = "ship2Second";
 					setShipTwoSecond([index, index + 1]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -335,6 +351,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2Second";
 					boardCopy[index + 10] = "ship2Second";
 					setShipTwoSecond([index, index + 10]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -363,6 +380,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index] = "ship2Second";
 					boardCopy[index - 1] = "ship2Second";
 					setShipTwoSecond([index, index - 1]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -397,6 +415,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index - 10] = "ship3";
 					boardCopy[index - 20] = "ship3";
 					setShipThree([index, index - 10, index - 20]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -429,6 +448,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index + 1] = "ship3";
 					boardCopy[index + 2] = "ship3";
 					setShipThree([index, index + 1, index + 2]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -461,6 +481,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index + 10] = "ship3";
 					boardCopy[index + 20] = "ship3";
 					setShipThree([index, index + 10, index + 20]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -493,6 +514,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index - 1] = "ship3";
 					boardCopy[index - 2] = "ship3";
 					setShipThree([index, index - 1, index - 2]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake(
@@ -531,6 +553,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index - 20] = "ship4";
 					boardCopy[index - 30] = "ship4";
 					setShipFour([index, index - 10, index - 20, index - 30]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
@@ -566,6 +589,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index + 2] = "ship4";
 					boardCopy[index + 3] = "ship4";
 					setShipFour([index, index + 1, index + 2, index + 3]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
@@ -601,6 +625,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index + 20] = "ship4";
 					boardCopy[index + 30] = "ship4";
 					setShipFour([index, index + 10, index + 20, index + 30]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
@@ -636,6 +661,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					boardCopy[index - 2] = "ship4";
 					boardCopy[index - 3] = "ship4";
 					setShipFour([index, index - 1, index - 2, index - 3]);
+					placeShipSound();
 					setBoard(boardCopy);
 					setMessage("");
 					setWhichShipToMake("All done!");
@@ -663,6 +689,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			shipArray.splice(shipIndex, 1);
 			if (shipArray.length === 0) {
 				totalShips.pop();
+				destroyShipSound();
 				socket.emit("ships-remaining", game_id, totalShips);
 			}
 		}
@@ -693,6 +720,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				clickedShip !== 'sunk-ship'
 			) {
 				boardCopy[clickedSquare] = "hitShip";
+				hitShipSound();
 				if (clickedShip === "ship3Enemy") {
 					shipsRemaining(
 						shipThreeEnemy,
@@ -750,6 +778,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				}
 			} else if (clickedShip === null) {
 				boardCopy[clickedSquare] = "missShip";
+				missShipSound();
 			}
 			setBoardEnemy(boardCopy);
 		}
@@ -837,6 +866,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	socket.on("get-enemy-click", handleGetEnemyClick);
 
 	const handleWinner = (username) => {
+		// gameOverMusic();
 		if (username === gameUsername) {
 			setWinner(true);
 		} else if (username !== gameUsername) {
@@ -863,7 +893,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						<div className="game-container">
 							<div className="game-board game-board-you">
 								<div className="username">
-									<span className="game-title"><img src={avatar1} alt="" /></span>
+									<span className="game-title">
+										<img src={avatar1} alt="" />
+									</span>
 									<span className="game-title-you">
 										{gameUsername}
 									</span>
@@ -883,7 +915,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 							</div>
 							<div className="game-board game-board-enemy">
 								<div className="username">
-									<span className="game-title"><img src={avatar2} alt="" /></span>
+									<span className="game-title">
+										<img src={avatar2} alt="" />
+									</span>
 									<span className="game-title-you">
 										{whoEnemy}
 									</span>
@@ -906,16 +940,23 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 							</div>
 						</div>
 					)}
-	
+
 					{winner && (
 						<>
 							<div className="victory-page">
-								<Victory /> 
+								<Victory />
 								<div className="exitBtn">
-									<button className="exitBtn-primary" onClick={() => window.location.reload(false)}>Click to exit</button>
+									<button
+										className="exitBtn-primary"
+										onClick={() =>
+											window.location.reload(false)
+										}
+									>
+										Click to exit
+									</button>
 								</div>
 							</div>
-						</>	
+						</>
 					)}
 
 					{winnerEnemy && (
@@ -923,20 +964,27 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 							<div className="loser-page">
 								<Loser />
 								<div className="exitBtn">
-									<button className="exitBtn-primary" onClick={() => window.location.reload(false)}>Click to exit</button>
+									<button
+										className="exitBtn-primary"
+										onClick={() =>
+											window.location.reload(false)
+										}
+									>
+										Click to exit
+									</button>
 								</div>
 							</div>
 						</>
 					)}
 				</>
 			)}
-			
+
 			{!boardReady && (
 				<>
 					<div className="game-board game-board-you">
 						<div className="turn-tag">
 							<span className="whose-turn-name">{yourName}</span>
-						</div>	
+						</div>
 						<p className="text-directions">
 							Directions of the ship:
 						</p>
