@@ -211,6 +211,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-grow: 1;
 }
 
 #messages-wrapper {
@@ -220,9 +221,13 @@
 #messages {
     border: solid;
     border-radius: 5px;
-    overflow: auto;
-    height: 100px;
+    flex-grow: 1;
+    overflow-y: scroll;
+    height: 120px;
     background-color: white;
+    flex-direction: column;
+    flex: 1;
+
 }
 
 #message-form {
@@ -233,9 +238,9 @@
 }
 
 .message {
-    font-size: 30px;
+    font-size: 1.5em;
 }
 
-.user .content {
-    font-family: sans-serif;
+.user {
+    margin-right: 0.3em;
 }

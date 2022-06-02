@@ -159,48 +159,50 @@ const BattleboardPage = () => {
 				</>
 			)}
 
-			<div id="chat">
+			{!waiting && (
+				<div id="chat">
 
-				<div id="messages-wrapper">
-					<ListGroup id="messages">
-						{messages.map((message, index) => {
-							// const ts = new Date(message.timestamp);
-							// const time = ts.toLocaleTimeString();
-							return (
-								<ListGroup.Item key={index} className="message">
-									{/* <span className="time">{time}</span> */}
-									<span className="user">
-										{message.username}:
-									</span>
-									<span className="content">
-										{message.content}
-									</span>
-								</ListGroup.Item>
-							);
-						})}
-					</ListGroup>
+					<div id="messages-wrapper">
+						<ListGroup id="messages">
+							{messages.map((message, index) => {
+								// const ts = new Date(message.timestamp);
+								// const time = ts.toLocaleTimeString();
+								return (
+									<ListGroup.Item key={index} className="message">
+										{/* <span className="time">{time}</span> */}
+										<span className="user">
+											{message.username}:
+										</span>
+										<span className="content">
+											{message.content}
+										</span>
+									</ListGroup.Item>
+								);
+							})}
+						</ListGroup>
 
-					<Form onSubmit={handleSendMessage} id="message-form">
-					<InputGroup>
-						<Form.Control
-							onChange={(e) => setMessage(e.target.value)}
-							placeholder="Say something nice..."
-							ref={messageRef}
-							required
-							type="text"
-							value={message}
-						/>
-						<Button
-							variant="success"
-							type="submit"
-							disabled={!message.length}
-						>
-							Send
-						</Button>
-					</InputGroup>
-				</Form>
+						<Form onSubmit={handleSendMessage} id="message-form">
+							<InputGroup>
+								<Form.Control
+									onChange={(e) => setMessage(e.target.value)}
+									placeholder="Say something nice..."
+									ref={messageRef}
+									required
+									type="text"
+									value={message}
+								/>
+								<Button
+									variant="success"
+									type="submit"
+									disabled={!message.length}
+								>
+									Send
+								</Button>
+							</InputGroup>
+					</Form>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };
