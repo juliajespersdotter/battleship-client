@@ -17,27 +17,32 @@ const BattleboardPage = () => {
 	const navigate = useNavigate();
 	const [turn, setTurn] = useState();
 
-	const handleUpdatePlayers = (playerlist) => {
-		setTurn(Object.values(playerlist)[0]);
-
-		if (Object.keys(playerlist).length === 2) {
-			if (Object.values(playerlist)[0] === gameUsername) {
-				setEnemy(Object.values(playerlist)[1]);
-			} else {
-				setEnemy(Object.values(playerlist)[0]);
-			}
-
-			setWaiting(false);
-
-			socket.emit("update-list");
-		} else if (Object.keys(playerlist).length === 1) {
-			setWaiting(true);
-			socket.emit("update-list");
-		}
-	};
-
 	// connect to room when component is mounted
 	useEffect(() => {
+		const handleUpdatePlayers = (playerlist) => {
+			// set turn to be the first player in player list
+			setTurn(Object.values(playerlist)[0]);
+
+			if (Object.keys(playerlist).length === 2) {
+				if (Object.values(playerlist)[0] === gameUsername) {
+					setEnemy(Object.values(playerlist)[1]);
+				} else {
+					setEnemy(Object.values(playerlist)[0]);
+				}
+
+				setWaiting(false);
+				setDisconnectedMsg(false);
+
+				// update list of games on server to update Login page that this room is closed
+				socket.emit("update-list");
+
+				// if player leaves update games on server that this room is now open
+			} else if (Object.keys(playerlist).length === 1) {
+				setWaiting(true);
+				socket.emit("update-list");
+			}
+		};
+
 		// if no username, redirect them to the login page
 		if (!gameUsername) {
 			navigate("/");
@@ -49,19 +54,16 @@ const BattleboardPage = () => {
 		});
 
 		// listen for updated userlist
-
 		socket.on("player:list", handleUpdatePlayers);
 
-		socket.on("player:disconnect", (username) => {
+		socket.on("player:disconnected", (username) => {
 			setDisconnected(username);
 			setDisconnectedMsg(true);
 		});
-
 		return () => {
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
 
 	return (
@@ -84,6 +86,7 @@ const BattleboardPage = () => {
 					<WaitingRoom />
 				</div>
 			)}
+
 			{!waiting && (
 				<>
 					<Battleboard

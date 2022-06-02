@@ -1,7 +1,7 @@
 .wave2 {
-    background-image: url("../images/lost2.gif");
+    background-image: url("../images/lost.gif");
     background-size: cover;
-    font-size: 6em;
+    font-size: 5.5em;
     position: fixed;
 	top: 50%;
 	left: 50%;
@@ -17,5 +17,4 @@
 
 .wave2-tag {
     color: rgba(255, 255, 255, 0.15);
-
 }

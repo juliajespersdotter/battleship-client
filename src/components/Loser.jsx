@@ -1,7 +1,7 @@
 import React from 'react'
 import "../assets/css/Loser.css"
 
-export default function Loser() {
+export default function Loser(submit) {
     return (
         <div className="wrapper">  
                 <div className="wave2">
