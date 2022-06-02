@@ -32,6 +32,7 @@ const BattleboardPage = () => {
 			}
 
 			setWaiting(false);
+			setDisconnectedMsg(false);
 
 			socket.emit("update-list");
 		} else if (Object.keys(playerlist).length === 1) {
@@ -61,22 +62,21 @@ const BattleboardPage = () => {
 
 		socket.on("player:list", handleUpdatePlayers);
 
-		socket.on("player:disconnect", (username) => {
-			setDisconnected(username);
-			setDisconnectedMsg(true);
-		});
-
 		return () => {
 			// console.log("Running cleanup");
 
 			// socket.off("player:list", handleUpdatePlayers);
+
+			socket.on("player:disconnected", (username) => {
+				setDisconnected(username);
+				setDisconnectedMsg(true);
+			});
 
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, game_id, gameUsername, navigate]);
-
 	return (
 		<div className="gamewrapper">
 			<div className="game-header">
