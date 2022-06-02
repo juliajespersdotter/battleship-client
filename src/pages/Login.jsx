@@ -10,7 +10,6 @@ const Login = () => {
 	const [username, setUsername] = useState("");
 	const [game, setGame] = useState();
 	const [generateRoom, setGenerateRoom] = useState(false);
-	// const [customGame, setCustomGame] = useState("");
 	const [gamelist, setGamelist] = useState([]);
 	const { setGameUsername, socket } = useGameContext();
 	const navigate = useNavigate();
@@ -22,13 +21,11 @@ const Login = () => {
 		setGameUsername(username);
 
 		if (generateRoom) {
-			console.log(generateRoom);
 			const randomName = uniqueNamesGenerator({
 				dictionaries: [animals],
 				separator: "-",
 				length: 1,
 			});
-			console.log(randomName);
 			navigate(`/games/${randomName}`);
 		} else if (game) {
 			navigate(`/games/${game}`);
@@ -43,7 +40,6 @@ const Login = () => {
 
 		// change this???
 		socket.on("new-game-list", () => {
-			console.log("new game list");
 			socket.emit("get-game-list", (games) => {
 				const list = games.filter((game) => game.id);
 				setGamelist(list);
@@ -81,7 +77,10 @@ const Login = () => {
 							onChange={(e) => setGame(e.target.value)}
 							value={game}
 						>
-							{!gamelist && <option disabled>Loading...</option>}
+							{!gamelist.length && (
+								// <option disabled>No games currently</option>
+								<option value="">No games currently</option>
+							)}
 
 							{gamelist.length && (
 								<>

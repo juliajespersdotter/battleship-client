@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
-// import Loser from "../components/Loser"
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png";
 import "normalize.css";
 import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
-	// const [players, setPlayers] = useState([]);
-	// const [connected, setConnected] = useState(false);
+	const [disconnectedMsg, setDisconnectedMsg] = useState(false);
+	const [disconnected, setDisconnected] = useState("");
 	const [waiting, setWaiting] = useState(true);
 	const { gameUsername, socket } = useGameContext();
 	const [enemy, setEnemy] = useState();
@@ -19,8 +18,6 @@ const BattleboardPage = () => {
 	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
-		// console.log("Got new playerlist", playerlist);
-		// setPlayers(playerlist);
 		setTurn(Object.values(playerlist)[0]);
 
 		if (Object.keys(playerlist).length === 2) {
@@ -49,22 +46,18 @@ const BattleboardPage = () => {
 
 		// emit join request
 		socket.emit("player:joined", gameUsername, game_id, (status) => {
-			// console.log(
-			// 	`Successfully joined ${game_id} as ${gameUsername}`,
-			// 	status
-			// );
-			// setConnected(true);
 		});
 
 		// listen for updated userlist
 
 		socket.on("player:list", handleUpdatePlayers);
 
+		socket.on("player:disconnect", (username) => {
+			setDisconnected(username);
+			setDisconnectedMsg(true);
+		});
+
 		return () => {
-			// console.log("Running cleanup");
-
-			// socket.off("player:list", handleUpdatePlayers);
-
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
@@ -82,39 +75,17 @@ const BattleboardPage = () => {
 					<div className="room-name">
 						<p className="room-name-tagline">{game_id}</p>
 					</div>
+					{disconnectedMsg && <p>{disconnected} disconnected</p>}
 				</div>
 			</div>
 
 			{waiting && (
 				<div>
 					<WaitingRoom />
-					{/* <Loser /> */}
 				</div>
 			)}
-
-			{/* {countdown && (
-					<div className="countdown-timer">
-						<img src={Count} alt="" />
-					</div>
-			)} */}
-			{/* <h1 className="game-tagline">Let's Battleship</h1>
-				{waiting && 
-				<p>Waiting for player...</p>}
-				<div id="players">
-				<h1 className="game-tagline">Let's Battleship</h1>
-				{waiting && <p>Waiting for player...</p>}
-				{/* <div id="players">
-					<h2>Players</h2>
-					<ul className="online-players">
-						
-					<li>You: {gameUsername}</li>
-					<li>Enemy: {enemy}</li>
-					</ul>
-				</div> */}
-
 			{!waiting && (
 				<>
-					{/* <p>Game is starting!</p> */}
 					<Battleboard
 						yourName={gameUsername}
 						enemy={enemy}
