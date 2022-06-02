@@ -160,7 +160,6 @@ const BattleboardPage = () => {
 			)}
 
 			<div id="chat">
-				<h2>#{game_id} chatroom</h2>
 
 				<div id="messages-wrapper">
 					<ListGroup id="messages">
