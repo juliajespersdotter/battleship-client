@@ -43,7 +43,6 @@ p {
 .disconnected {
     font-size: 1.1em;
     text-transform: uppercase;
-    border: solid red;
     background-color: red;
     border-radius: 15px;
 	width: fit-content;
