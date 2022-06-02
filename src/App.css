@@ -49,14 +49,9 @@
 }
 
 
-.ship2 {
-    background-color: green;
-    border: green;
-}
-
-.ship2Second {
-    background-color: green;
-    border: green;
+.ship2, .ship2Second {
+    background-color: rgb(0, 184, 70);
+    border: rgb(0, 184, 70);
 }
 
 .ship3 {
@@ -177,5 +172,25 @@
 }
 
 .sunk-ship {
-    background-color: red;
+    background-image: url(./assets/images/pirat-skull.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.sunk-ship-green {
+    background-image: url(./assets/images/pirat-skull-green.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: green;
+}
+.sunk-ship-yellow {
+    background-image: url(./assets/images/pirat-skull-yellow.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: yellow;
+}
+.sunk-ship-orange {
+    background-image: url(./assets/images/pirat-skull-orange.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: orange;
 }
