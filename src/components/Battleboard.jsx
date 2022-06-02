@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import useSound from "use-sound";
 import destroyShip from "../assets/sounds/seaExplosion.wav";
 import missShip from "../assets/sounds/missShip.mp3";
-import hitShip from "../assets/sounds/boom.mp3";
+import hitShip from "../assets/sounds/cannon.mp3";
 import placeShip from "../assets/sounds/placeShip.wav";
 
 const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
@@ -709,7 +709,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			const boardCopy = [...boardEnemy];
 			const clickedShip = boardCopy[clickedSquare];
 
-			if (clickedShip !== "missShip" && clickedShip !== "hitShip"  && clickedShip !== "sunk-ship") {
+			if (
+				clickedShip !== "missShip" &&
+				clickedShip !== "hitShip" &&
+				clickedShip !== "sunk-ship"
+			) {
 				socket.emit("click-data-hit", game_id, clickedSquare, whoEnemy);
 			}
 
@@ -717,7 +721,7 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 				clickedShip !== null &&
 				clickedShip !== "missShip" &&
 				clickedShip !== "hitShip" &&
-				clickedShip !== 'sunk-ship'
+				clickedShip !== "sunk-ship"
 			) {
 				boardCopy[clickedSquare] = "hitShip";
 				hitShipSound();
@@ -728,10 +732,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						shipRemainEnemy
 					);
 					shipThreeEnemySunk.push(clickedSquare);
-					if(shipThreeEnemySunk.length === 3){
-						boardCopy[shipThreeEnemySunk[0]] = 'sunk-ship';
-						boardCopy[shipThreeEnemySunk[1]] = 'sunk-ship';
-						boardCopy[shipThreeEnemySunk[2]] = 'sunk-ship';
+					if (shipThreeEnemySunk.length === 3) {
+						boardCopy[shipThreeEnemySunk[0]] = "sunk-ship";
+						boardCopy[shipThreeEnemySunk[1]] = "sunk-ship";
+						boardCopy[shipThreeEnemySunk[2]] = "sunk-ship";
 					}
 				}
 				if (clickedShip === "ship4Enemy") {
@@ -741,11 +745,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						shipRemainEnemy
 					);
 					shipFourEnemySunk.push(clickedSquare);
-					if(shipFourEnemySunk.length === 4){
-						boardCopy[shipFourEnemySunk[0]] = 'sunk-ship';
-						boardCopy[shipFourEnemySunk[1]] = 'sunk-ship';
-						boardCopy[shipFourEnemySunk[2]] = 'sunk-ship';
-						boardCopy[shipFourEnemySunk[3]] = 'sunk-ship';
+					if (shipFourEnemySunk.length === 4) {
+						boardCopy[shipFourEnemySunk[0]] = "sunk-ship";
+						boardCopy[shipFourEnemySunk[1]] = "sunk-ship";
+						boardCopy[shipFourEnemySunk[2]] = "sunk-ship";
+						boardCopy[shipFourEnemySunk[3]] = "sunk-ship";
 					}
 				}
 				if (clickedShip === "ship2Enemy") {
@@ -755,9 +759,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						shipRemainEnemy
 					);
 					shipTwoEnemySunk.push(clickedSquare);
-					if(shipTwoEnemySunk.length === 2){
-						boardCopy[shipTwoEnemySunk[0]] = 'sunk-ship';
-						boardCopy[shipTwoEnemySunk[1]] = 'sunk-ship';
+					if (shipTwoEnemySunk.length === 2) {
+						boardCopy[shipTwoEnemySunk[0]] = "sunk-ship";
+						boardCopy[shipTwoEnemySunk[1]] = "sunk-ship";
 					}
 				}
 				if (clickedShip === "ship2SecondEnemy") {
@@ -767,9 +771,9 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						shipRemainEnemy
 					);
 					shipTwoSecondEnemySunk.push(clickedSquare);
-					if(shipTwoSecondEnemySunk.length === 2){
-						boardCopy[shipTwoSecondEnemySunk[0]] = 'sunk-ship';
-						boardCopy[shipTwoSecondEnemySunk[1]] = 'sunk-ship';
+					if (shipTwoSecondEnemySunk.length === 2) {
+						boardCopy[shipTwoSecondEnemySunk[0]] = "sunk-ship";
+						boardCopy[shipTwoSecondEnemySunk[1]] = "sunk-ship";
 					}
 				}
 				if (shipRemainEnemy.length === 0) {
@@ -787,43 +791,56 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const handleGetEnemyClick = (attackClick) => {
 		const boardCopy = [...board];
 		const clickedShip = boardCopy[attackClick];
-		if(boardCopy[attackClick] === 'ship2' && shipTwoSunk.indexOf(attackClick) === -1) {
+		if (
+			boardCopy[attackClick] === "ship2" &&
+			shipTwoSunk.indexOf(attackClick) === -1
+		) {
 			shipTwoSunk.push(attackClick);
 		}
-		if(boardCopy[attackClick] === 'ship2Second' && shipTwoSecondSunk.indexOf(attackClick) === -1) {
+		if (
+			boardCopy[attackClick] === "ship2Second" &&
+			shipTwoSecondSunk.indexOf(attackClick) === -1
+		) {
 			shipTwoSecondSunk.push(attackClick);
 		}
-		if(boardCopy[attackClick] === 'ship3' && shipThreeSunk.indexOf(attackClick) === -1) {
+		if (
+			boardCopy[attackClick] === "ship3" &&
+			shipThreeSunk.indexOf(attackClick) === -1
+		) {
 			shipThreeSunk.push(attackClick);
 		}
-		if(boardCopy[attackClick] === 'ship4' && shipFourSunk.indexOf(attackClick) === -1) {
+		if (
+			boardCopy[attackClick] === "ship4" &&
+			shipFourSunk.indexOf(attackClick) === -1
+		) {
 			shipFourSunk.push(attackClick);
 		}
-		
+
 		if (
 			clickedShip !== null &&
 			clickedShip !== "missShip" &&
-			clickedShip !== "hitShip" && clickedShip !== "sunk-ship"
+			clickedShip !== "hitShip" &&
+			clickedShip !== "sunk-ship"
 		) {
 			boardCopy[attackClick] = "hitShip";
-			if(shipTwoSunk.length === 2){
-				boardCopy[shipTwoSunk[0]] = 'sunk-ship-green';
-				boardCopy[shipTwoSunk[1]] = 'sunk-ship-green';
+			if (shipTwoSunk.length === 2) {
+				boardCopy[shipTwoSunk[0]] = "sunk-ship-green";
+				boardCopy[shipTwoSunk[1]] = "sunk-ship-green";
 			}
-			if(shipTwoSecondSunk.length === 2){
-				boardCopy[shipTwoSecondSunk[0]] = 'sunk-ship-green';
-				boardCopy[shipTwoSecondSunk[1]] = 'sunk-ship-green';
+			if (shipTwoSecondSunk.length === 2) {
+				boardCopy[shipTwoSecondSunk[0]] = "sunk-ship-green";
+				boardCopy[shipTwoSecondSunk[1]] = "sunk-ship-green";
 			}
-			if(shipThreeSunk.length === 3){
-				boardCopy[shipThreeSunk[0]] = 'sunk-ship-yellow';
-				boardCopy[shipThreeSunk[1]] = 'sunk-ship-yellow';
-				boardCopy[shipThreeSunk[2]] = 'sunk-ship-yellow';
+			if (shipThreeSunk.length === 3) {
+				boardCopy[shipThreeSunk[0]] = "sunk-ship-yellow";
+				boardCopy[shipThreeSunk[1]] = "sunk-ship-yellow";
+				boardCopy[shipThreeSunk[2]] = "sunk-ship-yellow";
 			}
-			if(shipFourSunk.length === 4){
-				boardCopy[shipFourSunk[0]] = 'sunk-ship-orange';
-				boardCopy[shipFourSunk[1]] = 'sunk-ship-orange';
-				boardCopy[shipFourSunk[2]] = 'sunk-ship-orange';
-				boardCopy[shipFourSunk[3]] = 'sunk-ship-orange';
+			if (shipFourSunk.length === 4) {
+				boardCopy[shipFourSunk[0]] = "sunk-ship-orange";
+				boardCopy[shipFourSunk[1]] = "sunk-ship-orange";
+				boardCopy[shipFourSunk[2]] = "sunk-ship-orange";
+				boardCopy[shipFourSunk[3]] = "sunk-ship-orange";
 			}
 			if (shipRemain.length === 0) {
 				setWinnerEnemy(true);
@@ -873,11 +890,11 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			setWinnerEnemy(true);
 		}
 	};
-	const handleClickonYourBoard =()=> {
+	const handleClickonYourBoard = () => {
 		// here dont need to be anything, it just to prevent onclick error
-		// when player clickar on its own gameboard it doesnt make error now in console.log 
-		// because both gameboard has onclick function 
-	}
+		// when player clickar on its own gameboard it doesnt make error now in console.log
+		// because both gameboard has onclick function
+	};
 
 	return (
 		<>
@@ -909,7 +926,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 								</p>
 								{!winner && !winnerEnemy && (
 									<div className="game-wrapper game-wrapper-you">
-										<Gameboard squares={board} onClick={handleClickonYourBoard}/>
+										<Gameboard
+											squares={board}
+											onClick={handleClickonYourBoard}
+										/>
 									</div>
 								)}
 							</div>
