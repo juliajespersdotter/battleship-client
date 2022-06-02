@@ -225,3 +225,41 @@
 .exitBtn-primary:hover {
     font-size: 2.6em;
 }
+
+#chat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+#messages-wrapper {
+    margin: 0 50px;
+}
+
+#messages {
+    border: solid;
+    border-radius: 5px;
+    flex-grow: 1;
+    overflow-y: scroll;
+    height: 120px;
+    background-color: white;
+    flex-direction: column;
+    flex: 1;
+
+}
+
+#message-form {
+    padding: 0;
+    margin: 20px 0;
+    border: solid;
+    border-radius: 5px;
+}
+
+.message {
+    font-size: 1.5em;
+}
+
+.user {
+    margin-right: 0.3em;
+}
