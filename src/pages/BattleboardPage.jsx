@@ -60,12 +60,11 @@ const BattleboardPage = () => {
 		// listen for updated userlist
 		socket.on("player:list", handleUpdatePlayers);
 
+		socket.on("player:disconnected", (username) => {
+			setDisconnected(username);
+			setDisconnectedMsg(true);
+		});
 		return () => {
-			socket.on("player:disconnected", (username) => {
-				setDisconnected(username);
-				setDisconnectedMsg(true);
-			});
-
 			// disconnect player
 			socket.emit("player:left", gameUsername, game_id);
 		};
