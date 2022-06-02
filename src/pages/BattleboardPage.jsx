@@ -160,16 +160,16 @@ const BattleboardPage = () => {
 			)}
 
 			<div id="chat">
-				<h2>#{game_id}</h2>
+				<h2>#{game_id} chatroom</h2>
 
 				<div id="messages-wrapper">
 					<ListGroup id="messages">
 						{messages.map((message, index) => {
-							const ts = new Date(message.timestamp);
-							const time = ts.toLocaleTimeString();
+							// const ts = new Date(message.timestamp);
+							// const time = ts.toLocaleTimeString();
 							return (
 								<ListGroup.Item key={index} className="message">
-									<span className="time">{time}</span>
+									{/* <span className="time">{time}</span> */}
 									<span className="user">
 										{message.username}:
 									</span>
@@ -180,9 +180,8 @@ const BattleboardPage = () => {
 							);
 						})}
 					</ListGroup>
-				</div>
 
-				<Form onSubmit={handleSendMessage} id="message-form">
+					<Form onSubmit={handleSendMessage} id="message-form">
 					<InputGroup>
 						<Form.Control
 							onChange={(e) => setMessage(e.target.value)}
@@ -201,6 +200,7 @@ const BattleboardPage = () => {
 						</Button>
 					</InputGroup>
 				</Form>
+				</div>
 			</div>
 		</div>
 	);
