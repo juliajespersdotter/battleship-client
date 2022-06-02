@@ -114,6 +114,38 @@
     font-weight: 900;
 }
 
+.directions-buttons {
+    text-align: center;
+    margin: auto;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.directions-buttons button {
+    margin-right: 0;
+}
+
+.messageToPlayer {
+    width: max-content;
+    margin: auto;
+    margin-top: 10px;
+    background: rgba(52, 246, 39, 0.6)
+}
+.messageToPlayer2 {
+    width: max-content;
+    margin: auto;
+    color: white;
+    margin-top: 10px;
+    background: rgba(245, 6, 6, 0.8)
+}
+.text-directions {
+    margin-bottom: 0;
+    margin-top: 30px;
+}
+
+.clickedButton{
+    background-color: rgb(6, 247, 6);
+}
 .whose-turn-name {
     font-size: 3em;
     font-weight: 700;

@@ -3,10 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
 import WaitingRoom from "./WaitingRoom";
-import Logo from "../assets/images/logo.png"
-import 'normalize.css';
-import "../assets/css/BattleboardPage.css"
-
+import Logo from "../assets/images/logo.png";
+import "normalize.css";
+import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
 	const [waiting, setWaiting] = useState(true);
@@ -17,7 +16,7 @@ const BattleboardPage = () => {
 	const [turn, setTurn] = useState();
 
 	const handleUpdatePlayers = (playerlist) => {
-		console.log("Got new playerlist", playerlist);
+		// console.log("Got new playerlist", playerlist);
 		// setPlayers(playerlist);
 		setTurn(Object.values(playerlist)[0]);
 
@@ -47,11 +46,10 @@ const BattleboardPage = () => {
 
 		// emit join request
 		socket.emit("player:joined", gameUsername, game_id, (status) => {
-			console.log(
-				`Successfully joined ${game_id} as ${gameUsername}`,
-				status
-			);
-
+			// console.log(
+			// 	`Successfully joined ${game_id} as ${gameUsername}`,
+			// 	status
+			// );
 			// setConnected(true);
 		});
 
@@ -59,8 +57,13 @@ const BattleboardPage = () => {
 
 		socket.on("player:list", handleUpdatePlayers);
 
+		socket.on("player:disconnect", (username) => {
+			setDisconnected(username);
+			setDisconnectedMsg(true);
+		});
+
 		return () => {
-			console.log("Running cleanup");
+			// console.log("Running cleanup");
 
 			// socket.off("player:list", handleUpdatePlayers);
 
@@ -73,15 +76,16 @@ const BattleboardPage = () => {
 	return (
 		<div className="gamewrapper">
 			<div className="game-header">
-
 				<div className="game-header-title">
-					 <div className="game-tagline"><img src={Logo} alt="" /></div>
+					<div className="game-tagline">
+						<img src={Logo} alt="" />
+					</div>
 
 					<div className="room-name">
 						<p className="room-name-tagline">{game_id}</p>
 					</div>
+					{disconnectedMsg && <p>{disconnected} disconnected</p>}
 				</div>
-
 			</div>
 
 			{waiting && (
@@ -99,8 +103,7 @@ const BattleboardPage = () => {
 					/>
 				</>
 			)}
-		</div>	
-
+		</div>
 	);
 };
 
