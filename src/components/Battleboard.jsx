@@ -33,8 +33,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	const [startGame, setStartGame] = useState(false);
 	const [sendShip, setSendShip] = useState(false);
 
-	// const [objectShipData, setObjectShipData] = useState({});
-
 	const [enemyShipsReady, setEnemyShipsReady] = useState(false);
 
 	const [boardReady, setBoardReady] = useState(false);
@@ -652,17 +650,12 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 	};
 
 	const startGameFunction = () => {
-		// console.log("yourship inside startgame", objectShipData);
-		// console.log("enemy ship inside start game", shipFourEnemy);
-		// if (shipFour.length !== 0 && shipFourEnemy.length !== 0) {
-		// console.log("startGame");
 		if (turn === null) {
 			setTurn(WhoseTurn);
 			if (WhoseTurn === yourName) {
 				setDisabled(false);
 			}
 		}
-		// setRenderBoards(true);
 		setBoardReady(true);
 	};
 
@@ -735,26 +728,17 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 					);
 				}
 				if (shipRemainEnemy.length === 0) {
-					//  console.log("shipRemainEnemy2", shipRemainEnemy);
 					// emit the winner to server
 					socket.emit("game-over", gameUsername, game_id);
 				}
-
-				// setTurn(whoEnemy);
-				// setDisabled(true);
 			} else if (clickedShip === null) {
 				boardCopy[clickedSquare] = "missShip";
-				// setTurn(whoEnemy);
-				// setDisabled(true);
 			}
 			setBoardEnemy(boardCopy);
-
-			// socket.emit("whose-turn", whoEnemy, game_id);
 		}
 	};
 
 	const handleGetEnemyClick = (attackClick) => {
-		// if (disabled === true) {
 		const boardCopy = [...board];
 		const clickedShip = boardCopy[attackClick];
 		// console.log()
@@ -776,10 +760,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 		}
 
 		setBoard(boardCopy);
-		// }
-		// setTurn(youName);
-		// setDisabled(true);
-		// socket.emit("whose-turn", youName, game_id);
 	};
 
 	const handleGetShipData = async (shipData) => {
@@ -810,7 +790,6 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			boardCopyEnemy[shipData.shipFour[3]] = "ship4Enemy";
 			setBoardEnemy(boardCopyEnemy);
 			setEnemyShipsReady(true);
-			// socket.emit("player-ready", game_id);
 		}
 	};
 
