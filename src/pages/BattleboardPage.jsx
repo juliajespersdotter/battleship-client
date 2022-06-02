@@ -4,10 +4,14 @@ import { useGameContext } from "../contexts/GameContextProvider";
 import Battleboard from "../components/Battleboard";
 import WaitingRoom from "./WaitingRoom";
 import Logo from "../assets/images/logo.png";
+// import useSound from "use-sound";
+// import waves from "../assets/sounds/waves.mp3";
 import "normalize.css";
 import "../assets/css/BattleboardPage.css";
 
 const BattleboardPage = () => {
+	// const [wavesSound, { stop }] = useSound(waves);
+
 	const [disconnectedMsg, setDisconnectedMsg] = useState(false);
 	const [disconnected, setDisconnected] = useState("");
 	const [waiting, setWaiting] = useState(true);
