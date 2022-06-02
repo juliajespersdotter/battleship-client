@@ -684,7 +684,8 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 			if (
 				clickedShip !== null &&
 				clickedShip !== "missShip" &&
-				clickedShip !== "hitShip"
+				clickedShip !== "hitShip" &&
+				clickedShip !== 'sunk-ship'
 			) {
 				boardCopy[clickedSquare] = "hitShip";
 				console.log("shipRemainEnemy1", shipRemainEnemy);
@@ -710,6 +711,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						clickedSquare,
 						shipRemainEnemy
 					);
+					if(shipTwoEnemy.length === 0) {
+						boardCopy[shipTwoEnemy[0]] = 'sunk-ship';
+						boardCopy[shipTwoEnemy[1]] = 'sunk-ship';
+					}
 				}
 				if (clickedShip === "ship2SecondEnemy") {
 					shipsRemaining(
@@ -717,6 +722,10 @@ const Battleboard = ({ yourName, enemy, WhoseTurn }) => {
 						clickedSquare,
 						shipRemainEnemy
 					);
+					if(shipTwoSecondEnemy.length === 0) {
+						boardCopy[shipTwoSecondEnemy[0]] = 'sunk-ship';
+						boardCopy[shipTwoSecondEnemy[1]] = 'sunk-ship';
+					}
 				}
 				if (shipRemainEnemy.length === 0) {
 					console.log("shipRemainEnemy2", shipRemainEnemy);

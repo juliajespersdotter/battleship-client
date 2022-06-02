@@ -143,3 +143,7 @@
 
     backdrop-filter: blur(5px);
 }
+
+.sunk-ship {
+    background-color: red;
+}
