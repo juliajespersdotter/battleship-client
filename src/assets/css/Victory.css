@@ -1,10 +1,12 @@
+.victory-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .victory-bg {
     background-size: cover;
     font-size: 6em;
-    position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	border-radius: 10px;
 	width: 50rem;
 	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
@@ -16,4 +18,8 @@
 
 .victory-bg img {
 	max-width: 450px;
+}
+
+.wrapper {
+	margin-bottom: 40px;
 }

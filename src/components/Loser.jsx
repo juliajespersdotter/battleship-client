@@ -15,7 +15,7 @@ export default function Loser(submit) {
 	}, [gameOverMusic, stop]);
 
 	return (
-		<div className="wrapper">
+		<div className="loser-wrapper">
 			<div className="wave2">
 				<h1 className="wave2-tag">YOU LOST</h1>
 			</div>

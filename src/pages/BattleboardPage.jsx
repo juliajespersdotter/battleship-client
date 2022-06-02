@@ -153,10 +153,13 @@ const BattleboardPage = () => {
 					<div className="room-name">
 						<p className="room-name-tagline">{game_id}</p>
 					</div>
-					{disconnectedMsg && <p>{disconnected} disconnected</p>}
 				</div>
 			</div>
 
+			<div className="disconnected">
+				{disconnectedMsg && <p className="disconnected-tag">{disconnected}: disconnected</p>}
+			</div>
+			
 			{waiting && (
 				<div>
 					<WaitingRoom />
