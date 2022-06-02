@@ -16,6 +16,7 @@ const BattleboardPage = () => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 	const messageRef = useRef();
+	const messagesEndRef = useRef(null);
 
 	// game logic code
 	const [disconnectedMsg, setDisconnectedMsg] = useState(false);
@@ -27,12 +28,20 @@ const BattleboardPage = () => {
 	const navigate = useNavigate();
 	const [turn, setTurn] = useState();
 
-	const handleIncomingMessage = (msg) => {
-		console.log("Received a new chat message", msg);
+	useEffect(() => {
+		// focus on message input
+		messageRef.current && messageRef.current.focus();
+		scrollToBottom();
+	}, []);
 
-		// add message to chat
-		setMessages((prevMessages) => [...prevMessages, msg]);
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		messageRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages]);
 
 	const handleSendMessage = async (e) => {
 		e.preventDefault();
@@ -61,10 +70,19 @@ const BattleboardPage = () => {
 		// clear message input and refocus on input element
 		setMessage("");
 		messageRef.current.focus();
+		scrollToBottom();
 	};
 
 	// connect to room when component is mounted
 	useEffect(() => {
+		const handleIncomingMessage = (msg) => {
+			console.log("Received a new chat message", msg);
+
+			// add message to chat
+			setMessages((prevMessages) => [...prevMessages, msg]);
+			scrollToBottom();
+		};
+
 		const handleUpdatePlayers = (playerlist) => {
 			// set turn to be the first player in player list
 			setTurn(Object.values(playerlist)[0]);
@@ -123,11 +141,6 @@ const BattleboardPage = () => {
 		};
 	}, [socket, game_id, gameUsername, navigate]);
 
-	useEffect(() => {
-		// focus on message input
-		messageRef.current && messageRef.current.focus();
-	}, []);
-
 	return (
 		<div className="gamewrapper">
 			<div className="game-header">
@@ -161,15 +174,14 @@ const BattleboardPage = () => {
 
 			{!waiting && (
 				<div id="chat">
-
 					<div id="messages-wrapper">
 						<ListGroup id="messages">
 							{messages.map((message, index) => {
-								// const ts = new Date(message.timestamp);
-								// const time = ts.toLocaleTimeString();
 								return (
-									<ListGroup.Item key={index} className="message">
-										{/* <span className="time">{time}</span> */}
+									<ListGroup.Item
+										key={index}
+										className="message"
+									>
 										<span className="user">
 											{message.username}:
 										</span>
@@ -179,6 +191,7 @@ const BattleboardPage = () => {
 									</ListGroup.Item>
 								);
 							})}
+							<div ref={messagesEndRef} />
 						</ListGroup>
 
 						<Form onSubmit={handleSendMessage} id="message-form">
@@ -199,7 +212,7 @@ const BattleboardPage = () => {
 									Send
 								</Button>
 							</InputGroup>
-					</Form>
+						</Form>
 					</div>
 				</div>
 			)}
